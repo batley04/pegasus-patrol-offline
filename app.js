@@ -541,6 +541,63 @@ async function startOfflinePatrol() {
     routeCheckpoints.length +
     " checkpoint(s) loaded.";
 
+const patrolCard =
+  document.getElementById(
+    "activePatrolCard"
+  );
+
+const routeTitle =
+  document.getElementById(
+    "activePatrolRoute"
+  );
+
+const progressBox =
+  document.getElementById(
+    "activePatrolProgress"
+  );
+
+const checkpointName =
+  document.getElementById(
+    "activeCheckpointName"
+  );
+
+
+if (patrolCard) {
+
+  patrolCard.style.display =
+    "block";
+
+}
+
+
+if (routeTitle) {
+
+  routeTitle.textContent =
+    selectedRoute
+      ? selectedRoute.name
+      : "Active Patrol";
+
+}
+
+
+if (progressBox) {
+
+  progressBox.textContent =
+    "Checkpoint 1 of " +
+    routeCheckpoints.length;
+
+}
+
+
+if (checkpointName) {
+
+  checkpointName.textContent =
+    routeCheckpoints.length
+      ? routeCheckpoints[0].name
+      : "No checkpoints loaded";
+
+}
+
 } catch (error) {
 
     statusBox.textContent =
