@@ -112,23 +112,24 @@ function openPegasusDB() {
             );
 
           }
+           if (
+            !db.objectStoreNames.contains(
+             "activePatrols"
+              )
+         ) {
 
-        };
-
-if (
-  !db.objectStoreNames.contains(
-    "activePatrols"
-  )
-) {
-
-  db.createObjectStore(
-    "activePatrols",
-    {
-      keyPath: "patrolID"
+            db.createObjectStore(
+           "activePatrols",
+         {
+         keyPath: "patrolID"
     }
   );
 
 }
+
+        };
+
+
 
         request.onsuccess =
         function (event) {
