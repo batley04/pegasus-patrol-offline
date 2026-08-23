@@ -543,12 +543,14 @@ async function startOfflinePatrol() {
 
 } catch (error) {
 
-  statusBox.textContent =
-    "❌ Patrol start error: " +
-    (
-      error && error.message
-        ? error.message
-        : String(error)
-    );
+    statusBox.textContent =
+      "❌ Patrol start error: " +
+      (
+        error && error.message
+          ? error.message
+          : String(error)
+      );
+
+  }
 
 }
