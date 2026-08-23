@@ -26,6 +26,8 @@ window.addEventListener(
 
 
           await showOfflineDataSummary();
+          
+          await loadOfflinePatrolSelectors();
 
 
           const testSites =
@@ -281,5 +283,117 @@ async function showOfflineDataSummary() {
       "Unable to read offline patrol data.";
 
   }
+
+}
+
+// ======================================================
+// LOAD OFFLINE SITE / ROUTE SELECTORS
+// ======================================================
+
+async function loadOfflinePatrolSelectors() {
+
+  const siteBox =
+    document.getElementById(
+      "offlineSite"
+    );
+
+  const routeBox =
+    document.getElementById(
+      "offlineRoute"
+    );
+
+  if (
+    !siteBox ||
+    !routeBox
+  ) {
+    return;
+  }
+
+
+  const sites =
+    await getOfflineRecords(
+      "sites"
+    );
+
+  const routes =
+    await getOfflineRecords(
+      "routes"
+    );
+
+
+  siteBox.innerHTML =
+    '<option value="">Select Site</option>';
+
+  routeBox.innerHTML =
+    '<option value="">Select Route</option>';
+
+
+  sites.forEach(
+    function (site) {
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+      option.value =
+        site.siteID;
+
+      option.textContent =
+        site.name;
+
+      siteBox.appendChild(
+        option
+      );
+
+    }
+  );
+
+
+  siteBox.addEventListener(
+    "change",
+    function () {
+
+      const selectedSiteID =
+        siteBox.value;
+
+      routeBox.innerHTML =
+        '<option value="">Select Route</option>';
+
+
+      routes
+        .filter(
+          function (route) {
+
+            return (
+              route.siteID ===
+              selectedSiteID
+            );
+
+          }
+        )
+        .forEach(
+          function (route) {
+
+            const option =
+              document.createElement(
+                "option"
+              );
+
+            option.value =
+              route.routeID;
+
+            option.textContent =
+              route.name;
+
+            routeBox.appendChild(
+              option
+            );
+
+          }
+        );
+
+    }
+  );
 
 }
