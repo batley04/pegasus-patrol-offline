@@ -4,8 +4,7 @@
 // ======================================================
 
 const CACHE_NAME =
-  "pegasus-patrol-build-008-v1";
-
+  "pegasus-patrol-build-008-v2";
 
 const APP_FILES = [
 
@@ -96,9 +95,9 @@ self.addEventListener(
   }
 );
 
-
 // ======================================================
 // FETCH
+// NETWORK FIRST + UPDATE OFFLINE CACHE
 // ======================================================
 
 self.addEventListener(
@@ -121,10 +120,31 @@ self.addEventListener(
         .then(
           function (response) {
 
+            const responseCopy =
+              response.clone();
+
+
+            caches
+              .open(
+                CACHE_NAME
+              )
+              .then(
+                function (cache) {
+
+                  cache.put(
+                    event.request,
+                    responseCopy
+                  );
+
+                }
+              );
+
+
             return response;
 
           }
         )
+
         .catch(
           function () {
 
