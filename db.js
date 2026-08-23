@@ -8,7 +8,7 @@ const PEGASUS_DB_NAME =
   "PegasusPatrolDB";
 
 const PEGASUS_DB_VERSION =
-  1;
+  2;
 
 
 // ======================================================
@@ -115,8 +115,22 @@ function openPegasusDB() {
 
         };
 
+if (
+  !db.objectStoreNames.contains(
+    "activePatrols"
+  )
+) {
 
-      request.onsuccess =
+  db.createObjectStore(
+    "activePatrols",
+    {
+      keyPath: "patrolID"
+    }
+  );
+
+}
+
+        request.onsuccess =
         function (event) {
 
           resolve(

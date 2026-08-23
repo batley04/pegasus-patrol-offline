@@ -399,3 +399,142 @@ async function loadOfflinePatrolSelectors() {
   );
 
 }
+
+// ======================================================
+// START OFFLINE PATROL
+// ======================================================
+
+async function startOfflinePatrol() {
+
+  const siteBox =
+    document.getElementById(
+      "offlineSite"
+    );
+
+  const routeBox =
+    document.getElementById(
+      "offlineRoute"
+    );
+
+  const statusBox =
+    document.getElementById(
+      "offlinePatrolStatus"
+    );
+
+
+  const siteID =
+    siteBox.value;
+
+  const routeID =
+    routeBox.value;
+
+
+  if (
+    !siteID ||
+    !routeID
+  ) {
+
+    statusBox.textContent =
+      "Select a site and route.";
+
+    return;
+
+  }
+
+
+  const routes =
+    await getOfflineRecords(
+      "routes"
+    );
+
+  const checkpoints =
+    await getOfflineRecords(
+      "checkpoints"
+    );
+
+
+  const selectedRoute =
+    routes.find(
+      function (route) {
+
+        return (
+          route.routeID ===
+          routeID
+        );
+
+      }
+    );
+
+
+  const routeCheckpoints =
+    checkpoints
+      .filter(
+        function (checkpoint) {
+
+          return (
+            checkpoint.routeID ===
+            routeID
+          );
+
+        }
+      )
+      .sort(
+        function (a, b) {
+
+          return (
+            Number(a.order || 0) -
+            Number(b.order || 0)
+          );
+
+        }
+      );
+
+
+  const patrolID =
+    "OFFLINE-" +
+    Date.now();
+
+
+  const patrol = {
+
+    patrolID:
+      patrolID,
+
+    siteID:
+      siteID,
+
+    routeID:
+      routeID,
+
+    routeName:
+      selectedRoute
+        ? selectedRoute.name
+        : "",
+
+    startedAt:
+      new Date().toISOString(),
+
+    status:
+      "Active",
+
+    checkpoints:
+      routeCheckpoints,
+
+    syncStatus:
+      "Pending"
+
+  };
+
+
+  await saveOfflineRecord(
+    "activePatrols",
+    patrol
+  );
+
+
+  statusBox.textContent =
+    "▶ Patrol started — " +
+    routeCheckpoints.length +
+    " checkpoint(s) loaded.";
+
+}
