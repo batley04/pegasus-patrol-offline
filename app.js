@@ -149,3 +149,95 @@ function updateConnectionStatus() {
   }
 
 }
+
+// ======================================================
+// MANUAL PATROL DATA SYNC
+// ======================================================
+
+async function manualPatrolSync() {
+
+  const statusBox =
+    document.getElementById(
+      "syncStatus"
+    );
+
+  if (!navigator.onLine) {
+
+    statusBox.textContent =
+      "🟠 Offline — cannot sync yet.";
+
+    return;
+
+  }
+
+  statusBox.textContent =
+    "🔄 Syncing patrol data...";
+
+  try {
+
+    const result =
+      await syncPatrolData();
+
+    statusBox.textContent =
+  "🟢 Patrol data synced";
+
+await showOfflineDataSummary();
+
+  } catch (error) {
+
+    statusBox.textContent =
+      "❌ Sync failed: " +
+      (
+        error.message ||
+        String(error)
+      );
+
+  }
+
+}
+
+// ======================================================
+// SHOW OFFLINE DATA COUNTS
+// ======================================================
+
+async function showOfflineDataSummary() {
+
+  const box =
+    document.getElementById(
+      "offlineDataSummary"
+    );
+
+  try {
+
+    const sites =
+      await getOfflineRecords(
+        "sites"
+      );
+
+    const routes =
+      await getOfflineRecords(
+        "routes"
+      );
+
+    const checkpoints =
+      await getOfflineRecords(
+        "checkpoints"
+      );
+
+    box.textContent =
+      "Offline data ready: " +
+      sites.length +
+      " site(s), " +
+      routes.length +
+      " route(s), " +
+      checkpoints.length +
+      " checkpoint(s).";
+
+  } catch (error) {
+
+    box.textContent =
+      "Unable to read offline patrol data.";
+
+  }
+
+}
