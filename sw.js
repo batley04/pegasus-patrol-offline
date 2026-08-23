@@ -4,7 +4,7 @@
 // ======================================================
 
 const CACHE_NAME =
-  "pegasus-patrol-build-008-v2";
+  "pegasus-patrol-build-008-v3";
 
 const APP_FILES = [
 
@@ -97,7 +97,7 @@ self.addEventListener(
 
 // ======================================================
 // FETCH
-// NETWORK FIRST + UPDATE OFFLINE CACHE
+// OFFLINE-FIRST APP SHELL
 // ======================================================
 
 self.addEventListener(
@@ -112,45 +112,116 @@ self.addEventListener(
     }
 
 
+    // ==================================================
+    // PAGE NAVIGATION
+    // ==================================================
+
+    if (
+      event.request.mode ===
+      "navigate"
+    ) {
+
+      event.respondWith(
+
+        fetch(
+          event.request
+        )
+          .then(
+            function (response) {
+
+              const copy =
+                response.clone();
+
+
+              caches
+                .open(
+                  CACHE_NAME
+                )
+                .then(
+                  function (cache) {
+
+                    cache.put(
+                      "./index.html",
+                      copy
+                    );
+
+                  }
+                );
+
+
+              return response;
+
+            }
+          )
+
+          .catch(
+            function () {
+
+              return caches.match(
+                "./index.html"
+              );
+
+            }
+          )
+
+      );
+
+      return;
+
+    }
+
+
+    // ==================================================
+    // APP FILES
+    // ==================================================
+
     event.respondWith(
 
-      fetch(
+      caches.match(
         event.request
       )
         .then(
-          function (response) {
+          function (cachedResponse) {
 
-            const responseCopy =
-              response.clone();
+            if (
+              cachedResponse
+            ) {
+
+              return cachedResponse;
+
+            }
 
 
-            caches
-              .open(
-                CACHE_NAME
-              )
+            return fetch(
+              event.request
+            )
               .then(
-                function (cache) {
+                function (response) {
 
-                  cache.put(
-                    event.request,
-                    responseCopy
-                  );
+                  const copy =
+                    response.clone();
+
+
+                  caches
+                    .open(
+                      CACHE_NAME
+                    )
+                    .then(
+                      function (cache) {
+
+                        cache.put(
+                          event.request,
+                          copy
+                        );
+
+                      }
+                    );
+
+
+                  return response;
 
                 }
               );
-
-
-            return response;
-
-          }
-        )
-
-        .catch(
-          function () {
-
-            return caches.match(
-              event.request
-            );
 
           }
         )
