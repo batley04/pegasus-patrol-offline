@@ -227,6 +227,8 @@ async function manualPatrolSync() {
 
 await showOfflineDataSummary();
 
+await loadOfflinePatrolSelectors();
+
   } catch (error) {
 
     statusBox.textContent =
