@@ -4,7 +4,7 @@
 // ======================================================
 
 const CACHE_NAME =
-  "pegasus-patrol-build-008-v6";
+  "pegasus-patrol-build-008-v7";
 
 const APP_FILES = [
 
