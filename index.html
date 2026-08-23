@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="theme-color"
+    content="#111827"
+  >
+
+  <link
+    rel="manifest"
+    href="manifest.json"
+  >
+
+  <title>
+    Pegasus Patrol
+  </title>
+
+  <style>
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .header {
+      background: #111827;
+      color: white;
+      padding: 24px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    #connectionStatus {
+      font-weight: bold;
+    }
+
+    .online {
+      color: #15803d;
+    }
+
+    .offline {
+      color: #b45309;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="header">
+
+      <h1>
+        🪽 Pegasus Patrol
+      </h1>
+
+      <p>
+        Offline Patrol System
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>
+        Connection
+      </h2>
+
+      <p id="connectionStatus">
+        Checking...
+      </p>
+
+    </div>
+
+
+    <div class="card">
+
+      <h2>
+        Build 008
+      </h2>
+
+      <p>
+        Offline patrol foundation loaded successfully.
+      </p>
+
+      <p>
+        This page should remain available
+        when the phone has no internet connection.
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <script src="db.js"></script>
+  <script src="sync.js"></script>
+  <script src="app.js"></script>
+
+</body>
+
+</html>
