@@ -526,15 +526,29 @@ async function startOfflinePatrol() {
   };
 
 
+  try {
+
+  statusBox.textContent =
+    "Starting patrol...";
+
   await saveOfflineRecord(
     "activePatrols",
     patrol
   );
 
-
   statusBox.textContent =
     "▶ Patrol started — " +
     routeCheckpoints.length +
     " checkpoint(s) loaded.";
+
+} catch (error) {
+
+  statusBox.textContent =
+    "❌ Patrol start error: " +
+    (
+      error && error.message
+        ? error.message
+        : String(error)
+    );
 
 }
