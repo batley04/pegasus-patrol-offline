@@ -17,6 +17,49 @@ window.addEventListener(
 
         updateConnectionStatus();
 
+openPegasusDB()
+  .then(
+    async function () {
+
+      const databaseStatus =
+        document.getElementById(
+          "databaseStatus"
+        );
+
+      if (databaseStatus) {
+
+        databaseStatus.textContent =
+          "✅ Offline database ready";
+
+      }
+
+      await showOfflineDataSummary();
+
+    }
+  )
+  .catch(
+    function (error) {
+
+      const databaseStatus =
+        document.getElementById(
+          "databaseStatus"
+        );
+
+      if (databaseStatus) {
+
+        databaseStatus.textContent =
+          "❌ Offline database error";
+
+      }
+
+      console.error(
+        "Pegasus database error:",
+        error
+      );
+
+    }
+  );
+
         console.log(
           "Pegasus connection restored."
         );
@@ -72,46 +115,6 @@ window.addEventListener(
   }
 );
 
-openPegasusDB()
-  .then(
-    function () {
-
-      const databaseStatus =
-        document.getElementById(
-          "databaseStatus"
-        );
-
-      if (databaseStatus) {
-
-        databaseStatus.textContent =
-          "✅ Offline database ready";
-
-      }
-
-    }
-  )
-  .catch(
-    function (error) {
-
-      const databaseStatus =
-        document.getElementById(
-          "databaseStatus"
-        );
-
-      if (databaseStatus) {
-
-        databaseStatus.textContent =
-          "❌ Offline database error";
-
-      }
-
-      console.error(
-        "Pegasus database error:",
-        error
-      );
-
-    }
-  );
 
 
 // ======================================================
