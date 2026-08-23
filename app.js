@@ -4,61 +4,94 @@
 // OFFLINE FOUNDATION
 // ======================================================
 
-
 window.addEventListener(
   "load",
   function () {
 
     updateConnectionStatus();
 
+
+    // ==================================================
+    // OPEN OFFLINE DATABASE ON STARTUP
+    // ==================================================
+
+    openPegasusDB()
+      .then(
+        async function () {
+
+          const databaseStatus =
+            document.getElementById(
+              "databaseStatus"
+            );
+
+
+          await showOfflineDataSummary();
+
+
+          const testSites =
+            await getOfflineRecords(
+              "sites"
+            );
+
+          const testRoutes =
+            await getOfflineRecords(
+              "routes"
+            );
+
+          const testCheckpoints =
+            await getOfflineRecords(
+              "checkpoints"
+            );
+
+
+          if (databaseStatus) {
+
+            databaseStatus.textContent =
+              "✅ DB open — " +
+              testSites.length +
+              " sites, " +
+              testRoutes.length +
+              " routes, " +
+              testCheckpoints.length +
+              " checkpoints";
+
+          }
+
+        }
+      )
+      .catch(
+        function (error) {
+
+          const databaseStatus =
+            document.getElementById(
+              "databaseStatus"
+            );
+
+          if (databaseStatus) {
+
+            databaseStatus.textContent =
+              "❌ Offline database error";
+
+          }
+
+          console.error(
+            "Pegasus database error:",
+            error
+          );
+
+        }
+      );
+
+
+    // ==================================================
+    // CONNECTION RESTORED
+    // ==================================================
+
     window.addEventListener(
       "online",
       function () {
 
         updateConnectionStatus();
-
-openPegasusDB()
-  .then(
-    async function () {
-
-      const databaseStatus =
-        document.getElementById(
-          "databaseStatus"
-        );
-
-      if (databaseStatus) {
-
-        databaseStatus.textContent =
-          "✅ Offline database ready";
-
-      }
-
-      await showOfflineDataSummary();
-
-    }
-  )
-  .catch(
-    function (error) {
-
-      const databaseStatus =
-        document.getElementById(
-          "databaseStatus"
-        );
-
-      if (databaseStatus) {
-
-        databaseStatus.textContent =
-          "❌ Offline database error";
-
-      }
-
-      console.error(
-        "Pegasus database error:",
-        error
-      );
-
-    }
-  );
 
         console.log(
           "Pegasus connection restored."
@@ -67,6 +100,10 @@ openPegasusDB()
       }
     );
 
+
+    // ==================================================
+    // CONNECTION LOST
+    // ==================================================
 
     window.addEventListener(
       "offline",
@@ -81,6 +118,10 @@ openPegasusDB()
       }
     );
 
+
+    // ==================================================
+    // SERVICE WORKER
+    // ==================================================
 
     if (
       "serviceWorker" in navigator
@@ -114,8 +155,6 @@ openPegasusDB()
 
   }
 );
-
-
 
 // ======================================================
 // CONNECTION STATUS
