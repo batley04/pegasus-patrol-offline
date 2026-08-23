@@ -611,3 +611,134 @@ if (checkpointName) {
   }
 
 }
+
+// ======================================================
+// CHECKPOINT CAMERA
+// ======================================================
+
+let checkpointCameraStream = null;
+
+
+// ======================================================
+// START CAMERA
+// ======================================================
+
+async function startCheckpointScanner() {
+
+  const scannerBox =
+    document.getElementById(
+      "scannerBox"
+    );
+
+  const video =
+    document.getElementById(
+      "scannerVideo"
+    );
+
+  const statusBox =
+    document.getElementById(
+      "checkpointStatus"
+    );
+
+
+  try {
+
+    statusBox.textContent =
+      "Opening camera...";
+
+
+    checkpointCameraStream =
+      await navigator.mediaDevices
+        .getUserMedia({
+          video: {
+            facingMode: {
+              ideal: "environment"
+            }
+          },
+          audio: false
+        });
+
+
+    video.srcObject =
+      checkpointCameraStream;
+
+
+    await video.play();
+
+
+    scannerBox.style.display =
+      "block";
+
+
+    statusBox.textContent =
+      "📷 Camera ready — point it at the checkpoint QR code.";
+
+
+  } catch (error) {
+
+    statusBox.textContent =
+      "❌ Camera error: " +
+      (
+        error && error.message
+          ? error.message
+          : String(error)
+      );
+
+  }
+
+}
+
+
+// ======================================================
+// STOP CAMERA
+// ======================================================
+
+function stopCheckpointScanner() {
+
+  const scannerBox =
+    document.getElementById(
+      "scannerBox"
+    );
+
+  const video =
+    document.getElementById(
+      "scannerVideo"
+    );
+
+
+  if (
+    checkpointCameraStream
+  ) {
+
+    checkpointCameraStream
+      .getTracks()
+      .forEach(
+        function (track) {
+
+          track.stop();
+
+        }
+      );
+
+    checkpointCameraStream =
+      null;
+
+  }
+
+
+  if (video) {
+
+    video.srcObject =
+      null;
+
+  }
+
+
+  if (scannerBox) {
+
+    scannerBox.style.display =
+      "none";
+
+  }
+
+}

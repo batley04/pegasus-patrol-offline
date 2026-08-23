@@ -214,6 +214,35 @@
     📷 Scan Checkpoint
   </button>
 
+<div
+  id="scannerBox"
+  style="display: none; margin-top: 16px;"
+>
+
+  <video
+    id="scannerVideo"
+    playsinline
+    muted
+    style="width: 100%; border-radius: 10px;"
+  ></video>
+
+  <canvas
+    id="scannerCanvas"
+    style="display: none;"
+  ></canvas>
+
+  <br>
+
+  <button
+    type="button"
+    id="stopScannerButton"
+    onclick="stopCheckpointScanner()"
+  >
+    ✖ Stop Camera
+  </button>
+
+</div>
+
   <p id="checkpointStatus">
     Patrol ready.
   </p>
