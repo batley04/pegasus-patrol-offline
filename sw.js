@@ -4,7 +4,7 @@
 // ======================================================
 
 const CACHE_NAME =
-  "pegasus-patrol-build-008-v14";
+  "pegasus-patrol-build-008-v15";
 
 const APP_FILES = [
 
@@ -14,6 +14,7 @@ const APP_FILES = [
   "./db.js",
   "./sync.js",
   "./manifest.json"
+  "./lib/jsQR.js",
 
 ];
 
