@@ -5,7 +5,7 @@
 // ======================================================
 
 const PEGASUS_DB_NAME =
-  "PegasusPatrolDB";
+  "PegasusPatrolDB_B008";
 
 const PEGASUS_DB_VERSION =
   3;
