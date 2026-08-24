@@ -34,18 +34,33 @@ window.addEventListener(
               "activePatrols"
             );
 
+const savedActivePatrol =
+  activePatrolRecords
+    .filter(
+      function (patrol) {
 
-          const savedActivePatrol =
-            activePatrolRecords.find(
-              function (patrol) {
+        return (
+          patrol.status ===
+          "Active"
+        );
 
-                return (
-                  patrol.status ===
-                  "Active"
-                );
+      }
+    )
+    .sort(
+      function (a, b) {
 
-              }
-            );
+        return (
+          new Date(
+            b.startedAt || 0
+          ).getTime() -
+          new Date(
+            a.startedAt || 0
+          ).getTime()
+        );
+
+      }
+    )[0] || null;
+
 
 
           if (savedActivePatrol) {
