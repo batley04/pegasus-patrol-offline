@@ -1084,3 +1084,158 @@ async function showPendingSyncSummary() {
   }
 
 }
+
+// ======================================================
+// OFFLINE GUARD LOGIN
+// ======================================================
+
+let currentOfflineGuard = null;
+
+
+async function offlineGuardLogin() {
+
+  const pinBox =
+    document.getElementById(
+      "guardPin"
+    );
+
+  const statusBox =
+    document.getElementById(
+      "guardLoginStatus"
+    );
+
+
+  const enteredPin =
+    String(
+      pinBox.value || ""
+    ).trim();
+
+
+  if (!enteredPin) {
+
+    statusBox.textContent =
+      "Enter your PIN.";
+
+    return;
+
+  }
+
+
+  try {
+
+    const guards =
+      await getOfflineRecords(
+        "guards"
+      );
+
+
+    const pinHash =
+      await hashPINForOfflineLogin(
+        enteredPin
+      );
+
+
+    const matchedGuard =
+      guards.find(
+        function (guard) {
+
+          return (
+            String(
+              guard.pinHash || ""
+            ) ===
+            pinHash
+          );
+
+        }
+      );
+
+
+    if (!matchedGuard) {
+
+      statusBox.textContent =
+        "❌ Invalid PIN.";
+
+      pinBox.value =
+        "";
+
+      return;
+
+    }
+
+
+    currentOfflineGuard =
+      matchedGuard;
+
+
+    statusBox.textContent =
+      "✅ Welcome, " +
+      matchedGuard.name;
+
+
+    pinBox.value =
+      "";
+
+
+  } catch (error) {
+
+    statusBox.textContent =
+      "❌ Login error: " +
+      (
+        error && error.message
+          ? error.message
+          : String(error)
+      );
+
+  }
+
+}
+
+
+// ======================================================
+// HASH PIN FOR OFFLINE LOGIN
+// ======================================================
+
+async function hashPINForOfflineLogin(
+  pin
+) {
+
+  const encoder =
+    new TextEncoder();
+
+  const data =
+    encoder.encode(
+      String(pin)
+    );
+
+
+  const hashBuffer =
+    await crypto.subtle.digest(
+      "SHA-256",
+      data
+    );
+
+
+  const hashArray =
+    Array.from(
+      new Uint8Array(
+        hashBuffer
+      )
+    );
+
+
+  return hashArray
+    .map(
+      function (byte) {
+
+        return byte
+          .toString(16)
+          .padStart(
+            2,
+            "0"
+          );
+
+      }
+    )
+    .join("");
+
+}
