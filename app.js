@@ -42,19 +42,27 @@ window.addEventListener(
             ) {
 
               let synced =
-                false;
-
-
-              try {
-
-                await syncPendingPatrol(
-                  syncRecord
+                await confirmOfflinePatrolSync(
+                  syncRecord.patrol.patrolID
                 );
 
-                synced =
-                  true;
 
-              } catch (error) {
+              if (!synced) {
+
+                try {
+
+                  await syncPendingPatrol(
+                    syncRecord
+                  );
+
+                } catch (error) {
+
+                  console.log(
+                    "Patrol POST response not confirmed directly."
+                  );
+
+                }
+
 
                 synced =
                   await confirmOfflinePatrolSync(
