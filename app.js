@@ -26,7 +26,7 @@ window.addEventListener(
 
 
           await showOfflineDataSummary();
-          
+          await showPendingSyncSummary();
           await loadOfflinePatrolSelectors();
 
 
@@ -984,6 +984,32 @@ await saveOfflineRecord(
   currentOfflinePatrol
 );
 
+const syncRecord = {
+
+  syncID:
+    "PATROL-" +
+    currentOfflinePatrol.patrolID,
+
+  type:
+    "CompletedPatrol",
+
+  patrol:
+    currentOfflinePatrol,
+
+  createdAt:
+    new Date().toISOString(),
+
+  status:
+    "Pending"
+
+};
+
+
+await saveOfflineRecord(
+  "pendingSync",
+  syncRecord
+);
+
   const checkpointName =
     document.getElementById(
       "activeCheckpointName"
@@ -1014,5 +1040,40 @@ return;
   requestAnimationFrame(
     scanCheckpointFrame
   );
+
+}
+
+// ======================================================
+// SHOW PENDING SYNC COUNT
+// ======================================================
+
+async function showPendingSyncSummary() {
+
+  const box =
+    document.getElementById(
+      "pendingSyncSummary"
+    );
+
+  if (!box) {
+    return;
+  }
+
+  try {
+
+    const pending =
+      await getOfflineRecords(
+        "pendingSync"
+      );
+
+    box.textContent =
+      pending.length +
+      " item(s) waiting to sync.";
+
+  } catch (error) {
+
+    box.textContent =
+      "Unable to read sync queue.";
+
+  }
 
 }
