@@ -598,19 +598,17 @@ if (routeTitle) {
 
 if (progressBox) {
 
-  progressBox.textContent =
-    "Checkpoint 1 of " +
-    routeCheckpoints.length;
+progressBox.textContent =
+  "Completed 0 of " +
+  routeCheckpoints.length;
 
 }
 
 
 if (checkpointName) {
 
-  checkpointName.textContent =
-    routeCheckpoints.length
-      ? routeCheckpoints[0].name
-      : "No checkpoints loaded";
+checkpointName.textContent =
+  "Scan checkpoints in any order";
 
 }
 
