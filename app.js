@@ -1320,24 +1320,54 @@ await saveOfflineRecord(
 
 await showPendingSyncSummary();
 
-
 if (navigator.onLine) {
 
   try {
 
-    await syncPendingPatrol(
-      syncRecord
-    );
+    let synced =
+      await confirmOfflinePatrolSync(
+        syncRecord.patrol.patrolID
+      );
 
-    await deleteOfflineRecord(
-      "pendingSync",
-      syncRecord.syncID
-    );
 
-    await showPendingSyncSummary();
+    if (!synced) {
 
-    currentOfflinePatrol.syncStatus =
-      "Synced";
+      try {
+
+        await syncPendingPatrol(
+          syncRecord
+        );
+
+      } catch (error) {
+
+        console.log(
+          "Patrol POST response not confirmed directly."
+        );
+
+      }
+
+
+      synced =
+        await confirmOfflinePatrolSync(
+          syncRecord.patrol.patrolID
+        );
+
+    }
+
+
+    if (synced) {
+
+      await deleteOfflineRecord(
+        "pendingSync",
+        syncRecord.syncID
+      );
+
+      await showPendingSyncSummary();
+
+      currentOfflinePatrol.syncStatus =
+        "Synced";
+
+    }
 
   } catch (error) {
 
