@@ -413,6 +413,8 @@ async function loadOfflinePatrolSelectors() {
 
 async function startOfflinePatrol() {
 
+
+
   const siteBox =
     document.getElementById(
       "offlineSite"
@@ -434,6 +436,15 @@ async function startOfflinePatrol() {
 
   const routeID =
     routeBox.value;
+
+if (!currentOfflineGuard) {
+
+  statusBox.textContent =
+    "❌ Please log in before starting a patrol.";
+
+  return;
+
+}
 
 
   if (
@@ -505,6 +516,15 @@ const patrol = {
 
   patrolID:
     patrolID,
+
+guardID:
+  currentOfflineGuard.guardID,
+
+guardName:
+  currentOfflineGuard.name,
+
+guardRole:
+  currentOfflineGuard.role,
 
   siteID:
     siteID,
@@ -1168,8 +1188,23 @@ async function offlineGuardLogin() {
 
 
     statusBox.textContent =
-      "✅ Welcome, " +
-      matchedGuard.name;
+  "✅ Logged in: " +
+  matchedGuard.name +
+  " (" +
+  matchedGuard.role +
+  ")";
+
+const loginButton =
+  document.querySelector(
+    "#guardLoginCard button"
+  );
+
+if (loginButton) {
+
+  loginButton.textContent =
+    "🔓 Logged In";
+
+}
 
 
     pinBox.value =
