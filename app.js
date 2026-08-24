@@ -1095,6 +1095,39 @@ await saveOfflineRecord(
   syncRecord
 );
 
+
+await showPendingSyncSummary();
+
+
+if (navigator.onLine) {
+
+  try {
+
+    await syncPendingPatrol(
+      syncRecord
+    );
+
+    await deleteOfflineRecord(
+      "pendingSync",
+      syncRecord.syncID
+    );
+
+    await showPendingSyncSummary();
+
+    currentOfflinePatrol.syncStatus =
+      "Synced";
+
+  } catch (error) {
+
+    console.error(
+      "Immediate patrol sync failed:",
+      error
+    );
+
+  }
+
+}
+
   const checkpointName =
     document.getElementById(
       "activeCheckpointName"
