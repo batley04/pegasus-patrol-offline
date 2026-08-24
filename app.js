@@ -494,36 +494,43 @@ async function startOfflinePatrol() {
     "OFFLINE-" +
     Date.now();
 
+const patrol = {
 
-  const patrol = {
+  patrolID:
+    patrolID,
 
-    patrolID:
-      patrolID,
+  siteID:
+    siteID,
 
-    siteID:
-      siteID,
+  routeID:
+    routeID,
 
-    routeID:
-      routeID,
+  routeName:
+    selectedRoute
+      ? selectedRoute.name
+      : "",
 
-    routeName:
-      selectedRoute
-        ? selectedRoute.name
-        : "",
+  startedAt:
+    new Date().toISOString(),
 
-    startedAt:
-      new Date().toISOString(),
+  status:
+    "Active",
 
-    status:
-      "Active",
+  checkpoints:
+    routeCheckpoints,
 
-    checkpoints:
-      routeCheckpoints,
+  syncStatus:
+    "Pending"
 
-    syncStatus:
-      "Pending"
+};
 
-  };
+
+currentOfflinePatrol =
+  patrol;
+
+currentCheckpointIndex =
+  0;
+
 
 
   try {
@@ -617,6 +624,7 @@ if (checkpointName) {
 // ======================================================
 
 let checkpointCameraStream = null;
+let currentCheckpointIndex = 0;
 
 
 // ======================================================
@@ -837,16 +845,61 @@ function scanCheckpointFrame() {
           code.data
         ).trim();
 
+       if (
+  !currentOfflinePatrol ||
+  !currentOfflinePatrol.checkpoints ||
+  !currentOfflinePatrol.checkpoints.length
+) {
 
-      statusBox.textContent =
-        "✅ QR detected: " +
-        scannedCode;
+  statusBox.textContent =
+    "❌ No active patrol checkpoint found.";
+
+  stopCheckpointScanner();
+
+  return;
+
+}
 
 
-      stopCheckpointScanner();
+const expectedCheckpoint =
+  currentOfflinePatrol.checkpoints[
+    currentCheckpointIndex
+  ];
 
-      return;
 
+const expectedCode =
+  String(
+    expectedCheckpoint.qrCode || ""
+  ).trim();
+
+
+if (
+  scannedCode !==
+  expectedCode
+) {
+
+  statusBox.textContent =
+    "❌ Wrong checkpoint. Expected " +
+    expectedCode +
+    ", scanned " +
+    scannedCode +
+    ".";
+
+  stopCheckpointScanner();
+
+  return;
+
+}
+
+
+statusBox.textContent =
+  "✅ Checkpoint verified: " +
+  expectedCheckpoint.name;
+
+stopCheckpointScanner();
+
+return;
+      
     }
 
   }
