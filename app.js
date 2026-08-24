@@ -389,6 +389,32 @@ await showPendingSyncSummary();
 
 await loadOfflinePatrolSelectors();
 
+ const activePatrolRecords =
+            await getOfflineRecords(
+              "activePatrols"
+            );
+
+
+          const savedActivePatrol =
+            activePatrolRecords.find(
+              function (patrol) {
+
+                return (
+                  patrol.status ===
+                  "Active"
+                );
+
+              }
+            );
+
+
+          if (savedActivePatrol) {
+
+            currentOfflinePatrol =
+              savedActivePatrol;
+
+          }
+
   } catch (error) {
 
     statusBox.textContent =
