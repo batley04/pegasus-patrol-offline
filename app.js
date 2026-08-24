@@ -969,6 +969,21 @@ if (
   currentOfflinePatrol.checkpoints.length
 ) {
 
+currentOfflinePatrol.status =
+  "Completed";
+
+currentOfflinePatrol.completedAt =
+  new Date().toISOString();
+
+currentOfflinePatrol.syncStatus =
+  "Pending";
+
+
+await saveOfflineRecord(
+  "activePatrols",
+  currentOfflinePatrol
+);
+
   const checkpointName =
     document.getElementById(
       "activeCheckpointName"
@@ -981,8 +996,8 @@ if (
 
   }
 
-  statusBox.textContent =
-    "✅ All checkpoints completed.";
+ statusBox.textContent =
+  "✅ Patrol complete — waiting to sync.";
 
 }
 
