@@ -111,15 +111,37 @@ window.addEventListener(
       for (
         const syncRecord of pendingRecords
       ) {
+let synced =
+          false;
 
-        await syncPendingPatrol(
-          syncRecord
-        );
 
-        await deleteOfflineRecord(
-          "pendingSync",
-          syncRecord.syncID
-        );
+        try {
+
+          await syncPendingPatrol(
+            syncRecord
+          );
+
+          synced =
+            true;
+
+        } catch (error) {
+
+          synced =
+            await confirmOfflinePatrolSync(
+              syncRecord.patrol.patrolID
+            );
+
+        }
+
+
+ if (synced) {
+
+          await deleteOfflineRecord(
+            "pendingSync",
+            syncRecord.syncID
+          );
+
+        }
 
       }
 

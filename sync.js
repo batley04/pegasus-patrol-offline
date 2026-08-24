@@ -279,3 +279,95 @@ headers: {
   return result;
 
 }
+
+// ======================================================
+// CONFIRM OFFLINE PATROL EXISTS ON SERVER
+// ======================================================
+
+function confirmOfflinePatrolSync(
+  patrolID
+) {
+
+  return new Promise(
+    function (resolve, reject) {
+
+      const callbackName =
+        "pegasusPatrolConfirm_" +
+        Date.now();
+
+
+      const script =
+        document.createElement(
+          "script"
+        );
+
+
+      window[
+        callbackName
+      ] =
+        function (result) {
+
+          try {
+
+            resolve(
+              !!(
+                result &&
+                result.success &&
+                result.found
+              )
+            );
+
+          } finally {
+
+            delete window[
+              callbackName
+            ];
+
+            script.remove();
+
+          }
+
+        };
+
+
+      script.onerror =
+        function () {
+
+          delete window[
+            callbackName
+          ];
+
+          script.remove();
+
+          reject(
+            new Error(
+              "Unable to confirm patrol sync."
+            )
+          );
+
+        };
+
+
+      script.src =
+        PEGASUS_API_URL +
+        "?api=offline-patrol-confirm" +
+        "&patrolID=" +
+        encodeURIComponent(
+          patrolID
+        ) +
+        "&callback=" +
+        encodeURIComponent(
+          callbackName
+        ) +
+        "&t=" +
+        Date.now();
+
+
+      document.body.appendChild(
+        script
+      );
+
+    }
+  );
+
+}
