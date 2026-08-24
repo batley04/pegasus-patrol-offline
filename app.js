@@ -89,18 +89,54 @@ window.addEventListener(
     // CONNECTION RESTORED
     // ==================================================
 
-    window.addEventListener(
-      "online",
-      function () {
+       window.addEventListener(
+  "online",
+  async function () {
 
-        updateConnectionStatus();
+    updateConnectionStatus();
 
-        console.log(
-          "Pegasus connection restored."
+    console.log(
+      "Pegasus connection restored."
+    );
+
+
+    try {
+
+      const pendingRecords =
+        await getOfflineRecords(
+          "pendingSync"
+        );
+
+
+      for (
+        const syncRecord of pendingRecords
+      ) {
+
+        await syncPendingPatrol(
+          syncRecord
+        );
+
+        await deleteOfflineRecord(
+          "pendingSync",
+          syncRecord.syncID
         );
 
       }
-    );
+
+
+      await showPendingSyncSummary();
+
+    } catch (error) {
+
+      console.error(
+        "Automatic patrol sync failed:",
+        error
+      );
+
+    }
+
+  }
+);
 
 
     // ==================================================
@@ -247,6 +283,7 @@ const pendingRecords =
   "🟢 Patrol data synced";
 
 await showOfflineDataSummary();
+await showPendingSyncSummary();
 
 await loadOfflinePatrolSelectors();
 
