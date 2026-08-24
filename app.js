@@ -236,6 +236,11 @@ const pendingRecords =
         syncRecord
       );
 
+       await deleteOfflineRecord(
+        "pendingSync",
+        syncRecord.syncID
+      );
+
     }
 
     statusBox.textContent =
