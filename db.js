@@ -283,3 +283,58 @@ async function getOfflineRecords(
   );
 
 }
+
+// ======================================================
+// DELETE RECORD
+// ======================================================
+
+async function deleteOfflineRecord(
+  storeName,
+  key
+) {
+
+  const db =
+    await openPegasusDB();
+
+
+  return new Promise(
+    function (resolve, reject) {
+
+      const transaction =
+        db.transaction(
+          storeName,
+          "readwrite"
+        );
+
+      const store =
+        transaction.objectStore(
+          storeName
+        );
+
+      const request =
+        store.delete(
+          key
+        );
+
+
+      request.onsuccess =
+        function () {
+
+          resolve(true);
+
+        };
+
+
+      request.onerror =
+        function () {
+
+          reject(
+            request.error
+          );
+
+        };
+
+    }
+  );
+
+}

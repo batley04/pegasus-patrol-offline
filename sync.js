@@ -215,3 +215,67 @@ resolve({
   );
 
 }
+
+// ======================================================
+// SYNC ONE PENDING PATROL
+// ======================================================
+
+async function syncPendingPatrol(
+  syncRecord
+) {
+
+  if (
+    !syncRecord ||
+    !syncRecord.patrol
+  ) {
+
+    throw new Error(
+      "Pending patrol data is missing."
+    );
+
+  }
+
+
+  const response =
+    await fetch(
+      PEGASUS_API_URL +
+      "?api=offline-patrol-sync",
+      {
+        method: "POST",
+
+headers: {
+  "Content-Type":
+    "text/plain;charset=utf-8"
+},
+
+        body:
+          JSON.stringify({
+            patrol:
+              syncRecord.patrol
+          })
+      }
+    );
+
+
+  const result =
+    await response.json();
+
+
+  if (
+    !result ||
+    !result.success
+  ) {
+
+    throw new Error(
+      result &&
+      result.message
+        ? result.message
+        : "Patrol sync failed."
+    );
+
+  }
+
+
+  return result;
+
+}

@@ -222,6 +222,22 @@ async function manualPatrolSync() {
     const result =
       await syncPatrolData();
 
+const pendingRecords =
+      await getOfflineRecords(
+        "pendingSync"
+      );
+
+
+    for (
+      const syncRecord of pendingRecords
+    ) {
+
+      await syncPendingPatrol(
+        syncRecord
+      );
+
+    }
+
     statusBox.textContent =
   "🟢 Patrol data synced";
 
