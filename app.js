@@ -517,7 +517,17 @@ const patrol = {
     "Active",
 
   checkpoints:
-    routeCheckpoints,
+  routeCheckpoints.map(
+    function (checkpoint) {
+
+      return {
+        ...checkpoint,
+        status: "Pending",
+        scannedAt: ""
+      };
+
+    }
+  ),
 
   syncStatus:
     "Pending"
@@ -528,8 +538,7 @@ const patrol = {
 currentOfflinePatrol =
   patrol;
 
-currentCheckpointIndex =
-  0;
+
 
 
 
@@ -624,7 +633,7 @@ if (checkpointName) {
 // ======================================================
 
 let checkpointCameraStream = null;
-let currentCheckpointIndex = 0;
+
 
 
 // ======================================================
@@ -757,7 +766,7 @@ function stopCheckpointScanner() {
 // READ CHECKPOINT QR
 // ======================================================
 
-function scanCheckpointFrame() {
+async function scanCheckpointFrame() {
 
   const video =
     document.getElementById(
@@ -861,29 +870,25 @@ function scanCheckpointFrame() {
 }
 
 
-const expectedCheckpoint =
-  currentOfflinePatrol.checkpoints[
-    currentCheckpointIndex
-  ];
+const matchedCheckpoint =
+  currentOfflinePatrol.checkpoints.find(
+    function (checkpoint) {
+
+      return (
+        String(
+          checkpoint.qrCode || ""
+        ).trim() ===
+        scannedCode
+      );
+
+    }
+  );
 
 
-const expectedCode =
-  String(
-    expectedCheckpoint.qrCode || ""
-  ).trim();
-
-
-if (
-  scannedCode !==
-  expectedCode
-) {
+if (!matchedCheckpoint) {
 
   statusBox.textContent =
-    "❌ Wrong checkpoint. Expected " +
-    expectedCode +
-    ", scanned " +
-    scannedCode +
-    ".";
+    "❌ This checkpoint is not part of the active route.";
 
   stopCheckpointScanner();
 
@@ -892,13 +897,101 @@ if (
 }
 
 
+if (
+  matchedCheckpoint.status ===
+  "Completed"
+) {
+
+  statusBox.textContent =
+    "⚠️ Checkpoint already scanned: " +
+    matchedCheckpoint.name;
+
+  stopCheckpointScanner();
+
+  return;
+
+}
+
+
+matchedCheckpoint.status =
+  "Completed";
+
+matchedCheckpoint.scannedAt =
+  new Date().toISOString();
+
+
+await saveOfflineRecord(
+  "activePatrols",
+  currentOfflinePatrol
+);
+
+
+const completedCount =
+  currentOfflinePatrol.checkpoints
+    .filter(
+      function (checkpoint) {
+
+        return (
+          checkpoint.status ===
+          "Completed"
+        );
+
+      }
+    )
+    .length;
+
+
+const progressBox =
+  document.getElementById(
+    "activePatrolProgress"
+  );
+
+
+if (progressBox) {
+
+  progressBox.textContent =
+    "Completed " +
+    completedCount +
+    " of " +
+    currentOfflinePatrol.checkpoints.length;
+
+}
+
+
 statusBox.textContent =
-  "✅ Checkpoint verified: " +
-  expectedCheckpoint.name;
+  "✅ Checkpoint completed: " +
+  matchedCheckpoint.name;
+
 
 stopCheckpointScanner();
 
+
+if (
+  completedCount ===
+  currentOfflinePatrol.checkpoints.length
+) {
+
+  const checkpointName =
+    document.getElementById(
+      "activeCheckpointName"
+    );
+
+  if (checkpointName) {
+
+    checkpointName.textContent =
+      "All checkpoints completed";
+
+  }
+
+  statusBox.textContent =
+    "✅ All checkpoints completed.";
+
+}
+
+
 return;
+
+
       
     }
 
