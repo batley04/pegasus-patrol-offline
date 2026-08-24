@@ -59,6 +59,22 @@ function syncPatrolData() {
 
             }
 
+             // ===========================================
+             // SAVE GUARDS
+             // ===========================================
+
+ for (
+  const guard of
+  (result.guards || [])
+) {
+
+  await saveOfflineRecord(
+    "guards",
+    guard
+  );
+
+}
+
 
             // ===========================================
             // SAVE SITES
@@ -127,16 +143,22 @@ function syncPatrolData() {
               }
             );
 
+resolve({
+  success: true,
 
-            resolve({
-              success: true,
-              sites:
-                (result.sites || []).length,
-              routes:
-                (result.routes || []).length,
-              checkpoints:
-                (result.checkpoints || []).length
-            });
+  guards:
+    (result.guards || []).length,
+
+  sites:
+    (result.sites || []).length,
+
+  routes:
+    (result.routes || []).length,
+
+  checkpoints:
+    (result.checkpoints || []).length
+});
+
 
 
           } catch (error) {

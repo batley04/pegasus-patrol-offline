@@ -255,6 +255,11 @@ async function showOfflineDataSummary() {
 
   try {
 
+     const guards =
+  await getOfflineRecords(
+    "guards"
+  );
+
     const sites =
       await getOfflineRecords(
         "sites"
@@ -270,14 +275,16 @@ async function showOfflineDataSummary() {
         "checkpoints"
       );
 
-    box.textContent =
-      "Offline data ready: " +
-      sites.length +
-      " site(s), " +
-      routes.length +
-      " route(s), " +
-      checkpoints.length +
-      " checkpoint(s).";
+   box.textContent =
+  "Offline data ready: " +
+  guards.length +
+  " guard(s), " +
+  sites.length +
+  " site(s), " +
+  routes.length +
+  " route(s), " +
+  checkpoints.length +
+  " checkpoint(s).";
 
   } catch (error) {
 
