@@ -415,6 +415,81 @@ await loadOfflinePatrolSelectors();
 
           }
 
+          if (savedActivePatrol) {
+
+            const patrolCard =
+              document.getElementById(
+                "activePatrolCard"
+              );
+
+            const routeTitle =
+              document.getElementById(
+                "activePatrolRoute"
+              );
+
+            const progressBox =
+              document.getElementById(
+                "activePatrolProgress"
+              );
+
+            const checkpointName =
+              document.getElementById(
+                "activeCheckpointName"
+              );
+
+
+            const completedCount =
+              savedActivePatrol.checkpoints
+                .filter(
+                  function (checkpoint) {
+
+                    return (
+                      checkpoint.status ===
+                      "Completed"
+                    );
+
+                  }
+                )
+                .length;
+
+
+            if (patrolCard) {
+
+              patrolCard.style.display =
+                "block";
+
+            }
+
+
+            if (routeTitle) {
+
+              routeTitle.textContent =
+                savedActivePatrol.routeName ||
+                "Active Patrol";
+
+            }
+
+
+            if (progressBox) {
+
+              progressBox.textContent =
+                "Completed " +
+                completedCount +
+                " of " +
+                savedActivePatrol.checkpoints.length;
+
+            }
+
+
+            if (checkpointName) {
+
+              checkpointName.textContent =
+                "Continue scanning checkpoints";
+
+            }
+
+          }
+
   } catch (error) {
 
     statusBox.textContent =
