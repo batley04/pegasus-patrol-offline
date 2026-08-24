@@ -29,6 +29,57 @@ window.addEventListener(
           await showPendingSyncSummary();
           await loadOfflinePatrolSelectors();
 
+            if (navigator.onLine) {
+
+            const pendingRecords =
+              await getOfflineRecords(
+                "pendingSync"
+              );
+
+
+            for (
+              const syncRecord of pendingRecords
+            ) {
+
+              let synced =
+                false;
+
+
+              try {
+
+                await syncPendingPatrol(
+                  syncRecord
+                );
+
+                synced =
+                  true;
+
+              } catch (error) {
+
+                synced =
+                  await confirmOfflinePatrolSync(
+                    syncRecord.patrol.patrolID
+                  );
+
+              }
+
+
+              if (synced) {
+
+                await deleteOfflineRecord(
+                  "pendingSync",
+                  syncRecord.syncID
+                );
+
+              }
+
+            }
+
+
+            await showPendingSyncSummary();
+
+          }
+
 
           const testSites =
             await getOfflineRecords(
