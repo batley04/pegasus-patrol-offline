@@ -31,6 +31,27 @@ window.addEventListener(
 
             if (navigator.onLine) {
 
+            try {
+
+              await syncPatrolData();
+
+              await showOfflineDataSummary();
+
+              await loadOfflinePatrolSelectors();
+
+            } catch (error) {
+
+              console.log(
+                "Automatic patrol data refresh skipped:",
+                error
+              );
+
+            }
+
+          }
+
+            if (navigator.onLine) {
+
             const pendingRecords =
               await getOfflineRecords(
                 "pendingSync"
