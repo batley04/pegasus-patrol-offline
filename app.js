@@ -4,6 +4,8 @@
 // OFFLINE FOUNDATION
 // ======================================================
 
+let currentOfflinePatrol = null;
+
 window.addEventListener(
   "load",
   function () {
