@@ -8,7 +8,7 @@ const PEGASUS_DB_NAME =
   "PegasusPatrolDB_B008";
 
 const PEGASUS_DB_VERSION =
-  3;
+  4;
 
 
 // ======================================================
@@ -112,20 +112,38 @@ function openPegasusDB() {
             );
 
           }
-           if (
-            !db.objectStoreNames.contains(
-             "activePatrols"
-              )
-         ) {
 
-            db.createObjectStore(
-           "activePatrols",
-         {
-         keyPath: "patrolID"
+          if (
+  !db.objectStoreNames.contains(
+    "activePatrols"
+  )
+) {
+
+  db.createObjectStore(
+    "activePatrols",
+    {
+      keyPath: "patrolID"
     }
   );
 
 }
+
+
+if (
+  !db.objectStoreNames.contains(
+    "pendingSync"
+  )
+) {
+
+  db.createObjectStore(
+    "pendingSync",
+    {
+      keyPath: "syncID"
+    }
+  );
+
+}
+           
 
         };
 
@@ -154,7 +172,7 @@ function openPegasusDB() {
   );
 
 }
-
+ 
 
 // ======================================================
 // SAVE RECORD
