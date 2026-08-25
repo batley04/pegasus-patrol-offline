@@ -1591,6 +1591,20 @@ async function offlineGuardLogin() {
     currentOfflineGuard =
       matchedGuard;
 
+        const guardWelcome =
+      document.getElementById(
+        "guardWelcome"
+      );
+
+
+    if (guardWelcome) {
+
+      guardWelcome.textContent =
+        "Welcome, " +
+        matchedGuard.name;
+
+    }
+
     const guardAppContent =
       document.getElementById(
         "guardAppContent"
