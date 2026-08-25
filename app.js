@@ -1234,6 +1234,8 @@ await saveOfflineRecord(
   currentOfflinePatrol
 );
 
+renderActivePatrolChecklist();
+
 
 const completedCount =
   currentOfflinePatrol.checkpoints
