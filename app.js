@@ -1529,6 +1529,32 @@ async function offlineGuardLogin() {
     currentOfflineGuard =
       matchedGuard;
 
+    const guardAppContent =
+      document.getElementById(
+        "guardAppContent"
+      );
+
+    const guardLoginCard =
+      document.getElementById(
+        "guardLoginCard"
+      );
+
+
+    if (guardAppContent) {
+
+      guardAppContent.style.display =
+        "block";
+
+    }
+
+
+    if (guardLoginCard) {
+
+      guardLoginCard.style.display =
+        "none";
+
+    }
+
 
     statusBox.textContent =
   "✅ Logged in: " +
