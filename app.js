@@ -1960,8 +1960,22 @@ async function offlineGuardLogin() {
     if (guardWelcome) {
 
       guardWelcome.textContent =
-        "Welcome, " +
+        "Welcome back, " +
         matchedGuard.name;
+
+    }
+
+ const guardRoleDisplay =
+      document.getElementById(
+        "guardRoleDisplay"
+      );
+
+
+    if (guardRoleDisplay) {
+
+      guardRoleDisplay.textContent =
+        matchedGuard.role ||
+        "Guard";
 
     }
 

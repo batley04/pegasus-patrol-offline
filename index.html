@@ -144,13 +144,22 @@
            style="display: none;"
         >
 
-         <div class="card">
+        <div class="card">
 
-            <h2 id="guardWelcome">
-             Welcome
-            </h2>
+  <h2 id="guardWelcome">
+    Welcome
+  </h2>
 
-       </div>
+  <p id="guardRoleDisplay"></p>
+
+  <button
+    type="button"
+    onclick="guardLogout()"
+  >
+    🔒 Log Out
+  </button>
+
+</div>
 
           <div class="card">
 
@@ -216,19 +225,21 @@
   style="display: none;"
 >
 
+
+
   <h2 id="activePatrolRoute">
     Active Patrol
   </h2>
+
+  <h3>
+    Patrol progress
+  </h3>
+
 
   <p id="activePatrolProgress">
     Checkpoint 0 of 0
   </p>
 
-<h3>
-  Patrol Checkpoints
-</h3>
-
-<div id="activePatrolChecklist"></div>
 
   <h3 id="activeCheckpointName">
     No checkpoint loaded
@@ -284,6 +295,12 @@
 >
   🛑 End Patrol Early
 </button>
+
+<h3>
+  Patrol Checkpoints
+</h3>
+
+<div id="activePatrolChecklist"></div>
 
 </div>
 
@@ -353,19 +370,6 @@
   </div>
 
 </div>
-
-<div class="card">
-
-  <button
-    type="button"
-    onclick="guardLogout()"
-  >
-    🔒 Log Out
-  </button>
-
-</div>
-
-
 
  <div class="card">
 
