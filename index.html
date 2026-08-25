@@ -152,72 +152,12 @@
 
     </div>
 
-    <div class="card">
 
-  <h2>
-    Patrol Data
-  </h2>
-
-  <p id="syncStatus">
-    Waiting to sync...
-  </p>
-
-  <button
-    type="button"
-    onclick="manualPatrolSync()"
-  >
-    🔄 Refresh Patrol Data
-  </button>
-
-  <p id="offlineDataSummary">
-   Patrol data not loaded yet.
-  </p>
-
-<p id="pendingSyncSummary">
-  0 item(s) waiting to sync.
-</p>
 
 </div>
 
-
-    <div class="card">
-
-  <button
-    type="button"
-    onclick="
-      const box =
-        document.getElementById('systemStatusDetails');
-
-      box.style.display =
-        box.style.display === 'none'
-          ? 'block'
-          : 'none';
-    "
-  >
-    ⚙️ System Status
-  </button>
-
-  <div
-    id="systemStatusDetails"
-    style="display: none; margin-top: 15px;"
-  >
-
-    <p>
-      Pegasus Patrol ready.
-    </p>
-
-    <p>
-      This page remains available
-      when the phone has no internet connection.
-    </p>
-
-    <p id="databaseStatus">
-      Checking patrol data...
-    </p>
 
   </div>
-
-</div>
 
 <div class="card">
 
@@ -324,6 +264,85 @@
 
 </div>
 
+<div class="card">
+
+  <button
+    type="button"
+    onclick="
+      const box =
+        document.getElementById('patrolDataDetails');
+
+      box.style.display =
+        box.style.display === 'none'
+          ? 'block'
+          : 'none';
+    "
+  >
+    🔄 Patrol Data
+  </button>
+
+  <div
+    id="patrolDataDetails"
+    style="display: none; margin-top: 15px;"
+  >
+
+    <p id="syncStatus">
+      Waiting to sync...
+    </p>
+
+    <button
+      type="button"
+      onclick="manualPatrolSync()"
+    >
+      🔄 Refresh Patrol Data
+    </button>
+
+    <p id="offlineDataSummary">
+      Patrol data not loaded yet.
+    </p>
+
+    <p id="pendingSyncSummary">
+      0 item(s) waiting to sync.
+    </p>
+
+  </div>
+
+ <div class="card">
+
+  <button
+    type="button"
+    onclick="
+      const box =
+        document.getElementById('systemStatusDetails');
+
+      box.style.display =
+        box.style.display === 'none'
+          ? 'block'
+          : 'none';
+    "
+  >
+    ⚙️ System Status
+  </button>
+
+  <div
+    id="systemStatusDetails"
+    style="display: none; margin-top: 15px;"
+  >
+
+    <p>
+      Pegasus Patrol ready.
+    </p>
+
+    <p>
+      This page remains available
+      when the phone has no internet connection.
+    </p>
+
+    <p id="databaseStatus">
+      Checking patrol data...
+    </p>
+
+  </div>
   </div>
   </div>
 
