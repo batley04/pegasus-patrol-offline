@@ -1398,8 +1398,112 @@ if (navigator.onLine) {
 
   }
 
- statusBox.textContent =
-  "✅ Patrol complete — waiting to sync.";
+ const patrolCard =
+    document.getElementById(
+      "activePatrolCard"
+    );
+
+  const completedCard =
+    document.getElementById(
+      "completedPatrolCard"
+    );
+
+  const completedGuard =
+    document.getElementById(
+      "completedPatrolGuard"
+    );
+
+  const completedRoute =
+    document.getElementById(
+      "completedPatrolRoute"
+    );
+
+  const completedCheckpoints =
+    document.getElementById(
+      "completedPatrolCheckpoints"
+    );
+
+  const completedTime =
+    document.getElementById(
+      "completedPatrolTime"
+    );
+
+  const completedSync =
+    document.getElementById(
+      "completedPatrolSync"
+    );
+
+
+  if (patrolCard) {
+
+    patrolCard.style.display =
+      "none";
+
+  }
+
+
+  if (completedCard) {
+
+    completedCard.style.display =
+      "block";
+
+  }
+
+
+  if (completedGuard) {
+
+    completedGuard.textContent =
+      "Guard: " +
+      currentOfflinePatrol.guardName;
+
+  }
+
+
+  if (completedRoute) {
+
+    completedRoute.textContent =
+      "Route: " +
+      currentOfflinePatrol.routeName;
+
+  }
+
+
+  if (completedCheckpoints) {
+
+    completedCheckpoints.textContent =
+      "Checkpoints: " +
+      currentOfflinePatrol.checkpoints.length +
+      " of " +
+      currentOfflinePatrol.checkpoints.length +
+      " completed";
+
+  }
+
+
+  if (completedTime) {
+
+    completedTime.textContent =
+      "Completed: " +
+      new Date(
+        currentOfflinePatrol.completedAt
+      ).toLocaleString();
+
+  }
+
+
+  if (completedSync) {
+
+    completedSync.textContent =
+      currentOfflinePatrol.syncStatus ===
+        "Synced"
+        ? "Sync: ✅ Synced"
+        : "Sync: ⏳ Waiting to sync";
+
+  }
+
+
+  statusBox.textContent =
+    "✅ Patrol complete.";
 
 }
 
