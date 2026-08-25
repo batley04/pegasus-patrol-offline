@@ -1526,6 +1526,196 @@ return;
 }
 
 // ======================================================
+// END PATROL EARLY
+// ======================================================
+
+async function endPatrolEarly() {
+
+  if (
+    !currentOfflinePatrol ||
+    currentOfflinePatrol.status !==
+      "Active"
+  ) {
+
+    alert(
+      "There is no active patrol to end."
+    );
+
+    return;
+
+  }
+
+
+  const confirmed =
+    window.confirm(
+      "End this patrol early?\n\n" +
+      "Any checkpoints not scanned will be recorded as missed."
+    );
+
+
+  if (!confirmed) {
+
+    return;
+
+  }
+
+
+  stopCheckpointScanner();
+
+
+  const completedCount =
+    currentOfflinePatrol.checkpoints
+      .filter(
+        function (checkpoint) {
+
+          return (
+            checkpoint.status ===
+            "Completed"
+          );
+
+        }
+      )
+      .length;
+
+
+  currentOfflinePatrol.status =
+    "Ended Early";
+
+  currentOfflinePatrol.endedAt =
+    new Date().toISOString();
+
+  currentOfflinePatrol.syncStatus =
+    "Pending";
+
+
+  await saveOfflineRecord(
+    "activePatrols",
+    currentOfflinePatrol
+  );
+
+
+  const syncRecord = {
+
+    syncID:
+      "PATROL-" +
+      currentOfflinePatrol.patrolID,
+
+    type:
+      "EndedEarlyPatrol",
+
+    patrol:
+      currentOfflinePatrol,
+
+    createdAt:
+      new Date().toISOString(),
+
+    status:
+      "Pending"
+
+  };
+
+
+  await saveOfflineRecord(
+    "pendingSync",
+    syncRecord
+  );
+
+
+  await showPendingSyncSummary();
+
+
+  if (navigator.onLine) {
+
+    try {
+
+      let synced =
+        await confirmOfflinePatrolSync(
+          currentOfflinePatrol.patrolID
+        );
+
+
+      if (!synced) {
+
+        try {
+
+          await syncPendingPatrol(
+            syncRecord
+          );
+
+        } catch (error) {
+
+          console.log(
+            "Ended patrol POST response not confirmed directly."
+          );
+
+        }
+
+
+        synced =
+          await confirmOfflinePatrolSync(
+            currentOfflinePatrol.patrolID
+          );
+
+      }
+
+
+      if (synced) {
+
+        await deleteOfflineRecord(
+          "pendingSync",
+          syncRecord.syncID
+        );
+
+        currentOfflinePatrol.syncStatus =
+          "Synced";
+
+        await saveOfflineRecord(
+          "activePatrols",
+          currentOfflinePatrol
+        );
+
+        await showPendingSyncSummary();
+
+      }
+
+    } catch (error) {
+
+      console.error(
+        "Ended patrol sync failed:",
+        error
+      );
+
+    }
+
+  }
+
+
+  const patrolCard =
+    document.getElementById(
+      "activePatrolCard"
+    );
+
+
+  if (patrolCard) {
+
+    patrolCard.style.display =
+      "none";
+
+  }
+
+
+  alert(
+    "Patrol ended early.\n\n" +
+    completedCount +
+    " of " +
+    currentOfflinePatrol.checkpoints.length +
+    " checkpoints completed.\n\n" +
+    "Unscanned checkpoints will be recorded as missed."
+  );
+
+}
+
+// ======================================================
 // RENDER ACTIVE PATROL CHECKLIST
 // ======================================================
 
