@@ -1454,6 +1454,66 @@ async function showPendingSyncSummary() {
 
 let currentOfflineGuard = null;
 
+function guardLogout() {
+
+  currentOfflineGuard =
+    null;
+
+
+  const guardAppContent =
+    document.getElementById(
+      "guardAppContent"
+    );
+
+  const guardLoginCard =
+    document.getElementById(
+      "guardLoginCard"
+    );
+
+  const pinBox =
+    document.getElementById(
+      "guardPin"
+    );
+
+  const statusBox =
+    document.getElementById(
+      "guardLoginStatus"
+    );
+
+
+  if (guardAppContent) {
+
+    guardAppContent.style.display =
+      "none";
+
+  }
+
+
+  if (guardLoginCard) {
+
+    guardLoginCard.style.display =
+      "block";
+
+  }
+
+
+  if (pinBox) {
+
+    pinBox.value =
+      "";
+
+  }
+
+
+  if (statusBox) {
+
+    statusBox.textContent =
+      "Enter your guard PIN.";
+
+  }
+
+}
+
 
 async function offlineGuardLogin() {
 
