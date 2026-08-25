@@ -1512,6 +1512,8 @@ function guardLogout() {
 
   }
 
+  window.location.reload();
+
 }
 
 
