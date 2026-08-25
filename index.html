@@ -182,24 +182,42 @@
 
     <div class="card">
 
-      <h2>
-        Build 008
-      </h2>
+  <button
+    type="button"
+    onclick="
+      const box =
+        document.getElementById('systemStatusDetails');
 
-      <p>
-        Pegasus Patrol ready.
-      </p>
+      box.style.display =
+        box.style.display === 'none'
+          ? 'block'
+          : 'none';
+    "
+  >
+    ⚙️ System Status
+  </button>
 
-      <p>
-        This page should remain available
-        when the phone has no internet connection.
-      </p>
+  <div
+    id="systemStatusDetails"
+    style="display: none; margin-top: 15px;"
+  >
 
-      <p id="databaseStatus">
-  Checking patrol data...
-</p>
+    <p>
+      Pegasus Patrol ready.
+    </p>
 
-    </div>
+    <p>
+      This page remains available
+      when the phone has no internet connection.
+    </p>
+
+    <p id="databaseStatus">
+      Checking patrol data...
+    </p>
+
+  </div>
+
+</div>
 
 <div class="card">
 
