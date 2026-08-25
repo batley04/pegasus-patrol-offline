@@ -184,7 +184,65 @@ renderActivePatrolChecklist();
               const syncRecord of pendingRecords
             ) {
 
-              let synced =
+              if (
+                !syncRecord ||
+                !syncRecord.patrol
+              ) {
+
+                 continue;
+
+              }
+
+if (!syncRecord) {
+
+  continue;
+
+}
+
+
+// ====================================================
+// INCIDENT SYNC
+// ====================================================
+
+if (syncRecord.incident) {
+
+  try {
+
+    await syncPendingIncident(
+      syncRecord
+    );
+
+    await deleteOfflineRecord(
+      "pendingSync",
+      syncRecord.syncID
+    );
+
+  } catch (error) {
+
+    console.log(
+      "Incident sync pending:",
+      error
+    );
+
+  }
+
+  continue;
+
+}
+
+
+// ====================================================
+// PATROL SYNC
+// ====================================================
+
+if (!syncRecord.patrol) {
+
+  continue;
+
+}
+
+
+             let synced =
                 await confirmOfflinePatrolSync(
                   syncRecord.patrol.patrolID
                 );
@@ -313,7 +371,66 @@ renderActivePatrolChecklist();
       for (
         const syncRecord of pendingRecords
       ) {
-let synced =
+
+if (
+  !syncRecord ||
+  !syncRecord.patrol
+) {
+
+  continue;
+
+}
+
+
+     if (!syncRecord) {
+
+  continue;
+
+}
+
+
+// ====================================================
+// INCIDENT SYNC
+// ====================================================
+
+if (syncRecord.incident) {
+
+  try {
+
+    await syncPendingIncident(
+      syncRecord
+    );
+
+    await deleteOfflineRecord(
+      "pendingSync",
+      syncRecord.syncID
+    );
+
+  } catch (error) {
+
+    console.log(
+      "Incident sync pending:",
+      error
+    );
+
+  }
+
+  continue;
+
+}
+
+
+// ====================================================
+// PATROL SYNC
+// ====================================================
+
+if (!syncRecord.patrol) {
+
+  continue;
+
+}
+
+        let synced =
           false;
 
 
@@ -492,6 +609,43 @@ const pendingRecords =
       const syncRecord of pendingRecords
     ) {
 
+if (!syncRecord) {
+
+  continue;
+
+}
+
+
+// ====================================================
+// INCIDENT SYNC
+// ====================================================
+
+if (syncRecord.incident) {
+
+  await syncPendingIncident(
+    syncRecord
+  );
+
+  await deleteOfflineRecord(
+    "pendingSync",
+    syncRecord.syncID
+  );
+
+  continue;
+
+}
+
+
+// ====================================================
+// PATROL SYNC
+// ====================================================
+
+if (!syncRecord.patrol) {
+
+  continue;
+
+}
+
       await syncPendingPatrol(
         syncRecord
       );
@@ -546,6 +700,8 @@ async function showOfflineDataSummary() {
       await getOfflineRecords(
         "sites"
       );
+
+
 
     const routes =
       await getOfflineRecords(
@@ -719,6 +875,15 @@ async function startOfflinePatrol() {
   const routeID =
     routeBox.value;
 
+const siteName =
+  siteBox.options[
+    siteBox.selectedIndex
+  ]
+    ? siteBox.options[
+        siteBox.selectedIndex
+      ].textContent.trim()
+    : "";
+
 if (!currentOfflineGuard) {
 
   statusBox.textContent =
@@ -808,11 +973,14 @@ guardName:
 guardRole:
   currentOfflineGuard.role,
 
-  siteID:
-    siteID,
+siteID:
+  selectedSiteID,
 
-  routeID:
-    routeID,
+siteName:
+  selectedSiteName,
+
+routeID:
+  selectedRouteID,
 
   routeName:
     selectedRoute
@@ -1513,7 +1681,7 @@ if (navigator.onLine) {
 return;
 
 
-      
+
     }
 
   }
@@ -1712,6 +1880,431 @@ async function endPatrolEarly() {
     " checkpoints completed.\n\n" +
     "Unscanned checkpoints will be recorded as missed."
   );
+
+}
+
+// ======================================================
+// OFFLINE INCIDENT FORM
+// ======================================================
+
+function showOfflineIncidentForm() {
+
+  const form =
+    document.getElementById(
+      "offlineIncidentForm"
+    );
+
+  if (form) {
+
+    form.style.display =
+      "block";
+
+  }
+
+}
+
+
+function hideOfflineIncidentForm() {
+
+  const form =
+    document.getElementById(
+      "offlineIncidentForm"
+    );
+
+  const statusBox =
+    document.getElementById(
+      "offlineIncidentStatus"
+    );
+
+  if (form) {
+
+    form.style.display =
+      "none";
+
+  }
+
+  if (statusBox) {
+
+    statusBox.textContent =
+      "";
+
+  }
+
+}
+
+function readIncidentPhoto(file) {
+
+  return new Promise(
+    function (resolve, reject) {
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        function () {
+
+          const result =
+            String(
+              reader.result || ""
+            );
+
+          const commaPosition =
+            result.indexOf(",");
+
+
+          if (commaPosition === -1) {
+
+            reject(
+              new Error(
+                "Unable to read incident photo."
+              )
+            );
+
+            return;
+
+          }
+
+
+          resolve({
+            data:
+              result.substring(
+                commaPosition + 1
+              ),
+
+            mimeType:
+              file.type ||
+              "image/jpeg"
+          });
+
+        };
+
+
+      reader.onerror =
+        function () {
+
+          reject(
+            new Error(
+              "Unable to read incident photo."
+            )
+          );
+
+        };
+
+
+      reader.readAsDataURL(
+        file
+      );
+
+    }
+  );
+
+}
+
+async function submitOfflineIncident() {
+
+  if (!currentOfflineGuard) {
+
+    alert(
+      "Please log in before reporting an incident."
+    );
+
+    return;
+
+  }
+
+  const typeBox =
+    document.getElementById(
+      "offlineIncidentType"
+    );
+
+  const siteBox =
+  document.getElementById(
+    "offlineSite"
+  );
+
+const routeBox =
+  document.getElementById(
+    "offlineRoute"
+  );
+
+  const priorityBox =
+    document.getElementById(
+      "offlineIncidentPriority"
+    );
+
+  const descriptionBox =
+    document.getElementById(
+      "offlineIncidentDescription"
+    );
+
+  const photoBox =
+    document.getElementById(
+      "offlineIncidentPhoto"
+    );
+
+  const statusBox =
+    document.getElementById(
+      "offlineIncidentStatus"
+    );
+
+
+  const incidentType =
+    String(
+      typeBox.value || ""
+    ).trim();
+
+  const priority =
+    String(
+      priorityBox.value || "Low"
+    ).trim();
+
+  const description =
+    String(
+      descriptionBox.value || ""
+    ).trim();
+
+
+  if (!incidentType) {
+
+    statusBox.textContent =
+      "❌ Select an incident type.";
+
+    return;
+
+  }
+
+
+  if (!description) {
+
+    statusBox.textContent =
+      "❌ Enter an incident description.";
+
+    return;
+
+  }
+
+
+  const incidentID =
+    "INC-" +
+    Date.now();
+
+const selectedSiteID =
+  currentOfflinePatrol
+    ? currentOfflinePatrol.siteID
+    : (
+        siteBox
+          ? siteBox.value
+          : ""
+      );
+
+const selectedSiteName =
+  currentOfflinePatrol
+    ? currentOfflinePatrol.siteName || ""
+    : (
+        siteBox &&
+        siteBox.selectedIndex >= 0
+          ? siteBox.options[
+              siteBox.selectedIndex
+            ].textContent.trim()
+          : ""
+      );
+
+const selectedRouteID =
+  currentOfflinePatrol
+    ? currentOfflinePatrol.routeID
+    : (
+        routeBox
+          ? routeBox.value
+          : ""
+      );
+
+
+let photoData =
+  "";
+
+let photoMimeType =
+  "";
+
+
+if (
+  photoBox &&
+  photoBox.files &&
+  photoBox.files.length
+) {
+
+const photoFile =
+  photoBox.files[0];
+
+
+if (
+  photoFile.size >
+  4 * 1024 * 1024
+) {
+
+  statusBox.textContent =
+    "❌ Photo is too large. Use a photo under 4 MB.";
+
+  return;
+
+}
+
+await readIncidentPhoto(
+  photoFile
+);
+
+  photoData =
+    photoResult.data;
+
+  photoMimeType =
+    photoResult.mimeType;
+
+}
+
+  const incident = {
+
+    incidentID:
+      incidentID,
+
+    patrolID:
+      currentOfflinePatrol
+        ? currentOfflinePatrol.patrolID
+        : "",
+
+    guardID:
+      currentOfflineGuard.guardID,
+
+    guardName:
+      currentOfflineGuard.name,
+
+siteID:
+  currentOfflinePatrol
+    ? currentOfflinePatrol.siteID
+    : "",
+
+siteName:
+  currentOfflinePatrol
+    ? currentOfflinePatrol.siteName || ""
+    : "",
+
+routeID:
+  currentOfflinePatrol
+    ? currentOfflinePatrol.routeID
+    : "",
+
+
+    type:
+      incidentType,
+
+    priority:
+      priority,
+
+    description:
+      description,
+
+    photoData:
+      photoData,
+
+    photoMimeType:
+      photoMimeType,
+
+    createdAt:
+      new Date().toISOString(),
+
+    syncStatus:
+      "Pending"
+
+  };
+
+
+  await saveOfflineRecord(
+    "incidents",
+    incident
+  );
+
+
+  const syncRecord = {
+
+    syncID:
+      "INCIDENT-" +
+      incidentID,
+
+    type:
+      "Incident",
+
+    incident:
+      incident,
+
+    createdAt:
+      new Date().toISOString(),
+
+    status:
+      "Pending"
+
+  };
+
+
+  await saveOfflineRecord(
+    "pendingSync",
+    syncRecord
+  );
+
+
+  await showPendingSyncSummary();
+
+if (navigator.onLine) {
+
+  try {
+
+    statusBox.textContent =
+      "🔄 Syncing incident...";
+
+    await syncPendingIncident(
+      syncRecord
+    );
+
+    await deleteOfflineRecord(
+      "pendingSync",
+      syncRecord.syncID
+    );
+
+    incident.syncStatus =
+      "Synced";
+
+    await saveOfflineRecord(
+      "incidents",
+      incident
+    );
+
+    await showPendingSyncSummary();
+
+    statusBox.textContent =
+      "✅ Incident reported successfully.";
+
+  } catch (error) {
+
+    statusBox.textContent =
+      "✅ Incident saved — waiting to sync.";
+
+  }
+
+}
+
+  typeBox.value =
+    "";
+
+  priorityBox.value =
+    "Low";
+
+  descriptionBox.value =
+    "";
+
+  if (photoBox) {
+
+    photoBox.value =
+      "";
+
+  }
 
 }
 

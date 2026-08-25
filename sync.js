@@ -281,6 +281,70 @@ headers: {
 }
 
 // ======================================================
+// SYNC ONE PENDING INCIDENT
+// ======================================================
+
+async function syncPendingIncident(
+  syncRecord
+) {
+
+  if (
+    !syncRecord ||
+    !syncRecord.incident
+  ) {
+
+    throw new Error(
+      "Pending incident data is missing."
+    );
+
+  }
+
+
+  const response =
+    await fetch(
+      PEGASUS_API_URL +
+      "?api=offline-incident-sync",
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+
+        body:
+          JSON.stringify({
+            incident:
+              syncRecord.incident
+          })
+      }
+    );
+
+
+  const result =
+    await response.json();
+
+
+  if (
+    !result ||
+    !result.success
+  ) {
+
+    throw new Error(
+      result &&
+      result.message
+        ? result.message
+        : "Incident sync failed."
+    );
+
+  }
+
+
+  return result;
+
+}
+
+// ======================================================
 // CONFIRM OFFLINE PATROL EXISTS ON SERVER
 // ======================================================
 

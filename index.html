@@ -296,6 +296,101 @@
   🛑 End Patrol Early
 </button>
 
+<br><br>
+
+<button
+  type="button"
+  id="reportIncidentButton"
+  onclick="showOfflineIncidentForm()"
+>
+  🚨 Report Incident
+</button>
+
+<div
+  id="offlineIncidentForm"
+  style="display: none; margin-top: 20px;"
+>
+
+  <hr>
+
+  <h3>
+    🚨 Report Incident
+  </h3>
+
+  <label for="offlineIncidentType">
+    Incident Type
+  </label>
+
+  <select id="offlineIncidentType">
+    <option value="">Select Type</option>
+    <option value="Security">Security</option>
+    <option value="Health & Safety">Health & Safety</option>
+    <option value="Fire">Fire</option>
+    <option value="Maintenance">Maintenance</option>
+    <option value="Suspicious Person">Suspicious Person</option>
+    <option value="Vehicle">Vehicle</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <br><br>
+
+  <label for="offlineIncidentPriority">
+    Priority
+  </label>
+
+  <select id="offlineIncidentPriority">
+    <option value="Low">Low</option>
+    <option value="Medium">Medium</option>
+    <option value="High">High</option>
+  </select>
+
+  <br><br>
+
+  <label for="offlineIncidentDescription">
+    Description
+  </label>
+
+  <textarea
+    id="offlineIncidentDescription"
+    rows="5"
+    placeholder="Describe the incident..."
+  ></textarea>
+
+  <br><br>
+
+  <label for="offlineIncidentPhoto">
+    Photo Evidence
+  </label>
+
+  <input
+    id="offlineIncidentPhoto"
+    type="file"
+    accept="image/*"
+    capture="environment"
+  >
+
+  <p id="offlineIncidentStatus"></p>
+
+  <button
+    type="button"
+    onclick="submitOfflineIncident()"
+  >
+    ✅ Submit Incident
+  </button>
+
+  <br><br>
+
+  <button
+    type="button"
+    onclick="hideOfflineIncidentForm()"
+  >
+    ❌ Cancel
+  </button>
+
+</div>
+
+<hr>
+
 <h3>
   Patrol Checkpoints
 </h3>

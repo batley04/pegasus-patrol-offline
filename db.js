@@ -8,7 +8,7 @@ const PEGASUS_DB_NAME =
   "PegasusPatrolDB_B008";
 
 const PEGASUS_DB_VERSION =
-  4;
+  5;
 
 
 // ======================================================
@@ -139,6 +139,21 @@ if (
     "pendingSync",
     {
       keyPath: "syncID"
+    }
+  );
+
+}
+
+if (
+  !db.objectStoreNames.contains(
+    "incidents"
+  )
+) {
+
+  db.createObjectStore(
+    "incidents",
+    {
+      keyPath: "incidentID"
     }
   );
 
