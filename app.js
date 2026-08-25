@@ -137,6 +137,8 @@ const savedActivePatrol =
 
             }
 
+renderActivePatrolChecklist();
+
 
             if (checkpointName) {
 
@@ -911,6 +913,8 @@ progressBox.textContent =
 
 }
 
+renderActivePatrolChecklist();
+
 
 if (checkpointName) {
 
@@ -1291,6 +1295,8 @@ await saveOfflineRecord(
   currentOfflinePatrol
 );
 
+renderActivePatrolChecklist();
+
 const syncRecord = {
 
   syncID:
@@ -1412,6 +1418,64 @@ return;
   );
 
 }
+
+// ======================================================
+// RENDER ACTIVE PATROL CHECKLIST
+// ======================================================
+
+function renderActivePatrolChecklist() {
+
+  const checklist =
+    document.getElementById(
+      "activePatrolChecklist"
+    );
+
+
+  if (!checklist) {
+    return;
+  }
+
+
+  checklist.innerHTML =
+    "";
+
+
+  if (
+    !currentOfflinePatrol ||
+    !currentOfflinePatrol.checkpoints
+  ) {
+
+    return;
+
+  }
+
+
+  currentOfflinePatrol.checkpoints
+    .forEach(
+      function (checkpoint) {
+
+        const item =
+          document.createElement(
+            "div"
+          );
+
+
+        item.textContent =
+          checkpoint.status ===
+            "Completed"
+            ? "✅ " + checkpoint.name
+            : "☐ " + checkpoint.name;
+
+
+        checklist.appendChild(
+          item
+        );
+
+      }
+    );
+
+}
+
 
 // ======================================================
 // SHOW PENDING SYNC COUNT
