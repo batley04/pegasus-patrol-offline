@@ -749,6 +749,12 @@ async function loadOfflinePatrolSelectors() {
       "offlineRoute"
     );
 
+const incidentSiteBox =
+  document.getElementById(
+    "offlineIncidentSite"
+  );
+
+
   if (
     !siteBox ||
     !routeBox
@@ -771,6 +777,13 @@ async function loadOfflinePatrolSelectors() {
   siteBox.innerHTML =
     '<option value="">Select Site</option>';
 
+if (incidentSiteBox) {
+
+  incidentSiteBox.innerHTML =
+    '<option value="">Select Site</option>';
+
+}
+
   routeBox.innerHTML =
     '<option value="">Select Route</option>';
 
@@ -792,6 +805,25 @@ async function loadOfflinePatrolSelectors() {
       siteBox.appendChild(
         option
       );
+
+if (incidentSiteBox) {
+
+  const incidentOption =
+    document.createElement(
+      "option"
+    );
+
+  incidentOption.value =
+    site.siteID;
+
+  incidentOption.textContent =
+    site.name;
+
+  incidentSiteBox.appendChild(
+    incidentOption
+  );
+
+}
 
     }
   );
@@ -2018,9 +2050,9 @@ async function submitOfflineIncident() {
       "offlineIncidentType"
     );
 
-  const siteBox =
+ const siteBox =
   document.getElementById(
-    "offlineSite"
+    "offlineIncidentSite"
   );
 
 const routeBox =
@@ -2110,6 +2142,15 @@ const selectedSiteName =
           : ""
       );
 
+if (!selectedSiteID) {
+
+  statusBox.textContent =
+    "❌ Select a site.";
+
+  return;
+
+}
+
 const selectedRouteID =
   currentOfflinePatrol
     ? currentOfflinePatrol.routeID
@@ -2149,6 +2190,7 @@ if (
 
 }
 
+const photoResult =
 await readIncidentPhoto(
   photoFile
 );
@@ -2178,19 +2220,13 @@ await readIncidentPhoto(
       currentOfflineGuard.name,
 
 siteID:
-  currentOfflinePatrol
-    ? currentOfflinePatrol.siteID
-    : "",
+  selectedSiteID,
 
 siteName:
-  currentOfflinePatrol
-    ? currentOfflinePatrol.siteName || ""
-    : "",
+  selectedSiteName,
 
 routeID:
-  currentOfflinePatrol
-    ? currentOfflinePatrol.routeID
-    : "",
+  selectedRouteID,
 
 
     type:
