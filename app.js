@@ -1006,13 +1006,13 @@ guardRole:
   currentOfflineGuard.role,
 
 siteID:
-  selectedSiteID,
+  siteID,
 
 siteName:
-  selectedSiteName,
+  siteName,
 
 routeID:
-  selectedRouteID,
+  routeID,
 
   routeName:
     selectedRoute
