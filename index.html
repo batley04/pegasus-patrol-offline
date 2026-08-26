@@ -218,85 +218,7 @@
   </p>
 
 </div>
-
-<div
-  class="card"
-  id="activePatrolCard"
-  style="display: none;"
->
-
-
-
-  <h2 id="activePatrolRoute">
-    Active Patrol
-  </h2>
-
-  <h3>
-    Patrol progress
-  </h3>
-
-
-  <p id="activePatrolProgress">
-    Checkpoint 0 of 0
-  </p>
-
-
-  <h3 id="activeCheckpointName">
-    No checkpoint loaded
-  </h3>
-
-  <button
-  type="button"
-  id="scanCheckpointButton"
-  onclick="startCheckpointScanner()"
->
-  📷 Scan Checkpoint
-</button>
-
-<div
-  id="scannerBox"
-  style="display: none; margin-top: 16px;"
->
-
-  <video
-    id="scannerVideo"
-    playsinline
-    muted
-    style="width: 100%; border-radius: 10px;"
-  ></video>
-
-  <canvas
-    id="scannerCanvas"
-    style="display: none;"
-  ></canvas>
-
-  <br>
-
-  <button
-    type="button"
-    id="stopScannerButton"
-    onclick="stopCheckpointScanner()"
-  >
-    ✖ Stop Camera
-  </button>
-
-</div>
-
-  <p id="checkpointStatus">
-    Patrol ready.
-  </p>
-
-<br>
-
-<button
-  type="button"
-  id="endPatrolEarlyButton"
-  onclick="endPatrolEarly()"
->
-  🛑 End Patrol Early
-</button>
-
-<br><br>
+<div class="card">
 
 <button
   type="button"
@@ -389,7 +311,86 @@
 
 </div>
 
-<hr>
+</div>
+
+
+<div
+  class="card"
+  id="activePatrolCard"
+  style="display: none;"
+>
+
+
+
+  <h2 id="activePatrolRoute">
+    Active Patrol
+  </h2>
+
+  <h3>
+    Patrol progress
+  </h3>
+
+
+  <p id="activePatrolProgress">
+    Checkpoint 0 of 0
+  </p>
+
+
+  <h3 id="activeCheckpointName">
+    No checkpoint loaded
+  </h3>
+
+  <button
+  type="button"
+  id="scanCheckpointButton"
+  onclick="startCheckpointScanner()"
+>
+  📷 Scan Checkpoint
+</button>
+
+<div
+  id="scannerBox"
+  style="display: none; margin-top: 16px;"
+>
+
+  <video
+    id="scannerVideo"
+    playsinline
+    muted
+    style="width: 100%; border-radius: 10px;"
+  ></video>
+
+  <canvas
+    id="scannerCanvas"
+    style="display: none;"
+  ></canvas>
+
+  <br>
+
+  <button
+    type="button"
+    id="stopScannerButton"
+    onclick="stopCheckpointScanner()"
+  >
+    ✖ Stop Camera
+  </button>
+
+</div>
+
+  <p id="checkpointStatus">
+    Patrol ready.
+  </p>
+
+<br>
+
+<button
+  type="button"
+  id="endPatrolEarlyButton"
+  onclick="endPatrolEarly()"
+>
+  🛑 End Patrol Early
+</button>
+
 
 <h3>
   Patrol Checkpoints
