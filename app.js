@@ -1191,6 +1191,39 @@ async function startCheckpointScanner() {
 
     await video.play();
 
+// Try to turn the camera torch on automatically
+try {
+
+  const videoTrack =
+    checkpointCameraStream
+      .getVideoTracks()[0];
+
+  const capabilities =
+    videoTrack.getCapabilities
+      ? videoTrack.getCapabilities()
+      : {};
+
+  if (capabilities.torch) {
+
+    await videoTrack.applyConstraints({
+      advanced: [
+        {
+          torch: true
+        }
+      ]
+    });
+
+  }
+
+} catch (torchError) {
+
+  console.log(
+    "Torch not available:",
+    torchError
+  );
+
+}
+
 
     scannerBox.style.display =
       "block";
