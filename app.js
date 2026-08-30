@@ -2378,6 +2378,123 @@ if (navigator.onLine) {
 }
 
 // ======================================================
+// RESTORE ACTIVE PATROL FOR LOGGED-IN GUARD
+// ======================================================
+
+async function restoreGuardActivePatrol() {
+
+  if (!currentOfflineGuard) {
+    return;
+  }
+
+  const patrols =
+    await getOfflineRecords(
+      "activePatrols"
+    );
+
+  const guardPatrol =
+    patrols
+      .filter(
+        function (patrol) {
+
+          return (
+            patrol.status === "Active" &&
+            String(patrol.guardID) ===
+            String(currentOfflineGuard.guardID)
+          );
+
+        }
+      )
+      .sort(
+        function (a, b) {
+
+          return (
+            new Date(b.startedAt || 0).getTime() -
+            new Date(a.startedAt || 0).getTime()
+          );
+
+        }
+      )[0] || null;
+
+
+  currentOfflinePatrol =
+    guardPatrol;
+
+
+  const patrolCard =
+    document.getElementById(
+      "activePatrolCard"
+    );
+
+
+  if (!guardPatrol) {
+
+    if (patrolCard) {
+      patrolCard.style.display =
+        "none";
+    }
+
+    return;
+
+  }
+
+
+  if (patrolCard) {
+    patrolCard.style.display =
+      "block";
+  }
+
+
+  const routeTitle =
+    document.getElementById(
+      "activePatrolRoute"
+    );
+
+  if (routeTitle) {
+
+    routeTitle.textContent =
+      guardPatrol.routeName ||
+      "Active Patrol";
+
+  }
+
+
+  const completedCount =
+    guardPatrol.checkpoints
+      .filter(
+        function (checkpoint) {
+
+          return (
+            checkpoint.status ===
+            "Completed"
+          );
+
+        }
+      )
+      .length;
+
+
+  const progressBox =
+    document.getElementById(
+      "activePatrolProgress"
+    );
+
+  if (progressBox) {
+
+    progressBox.textContent =
+      "Completed " +
+      completedCount +
+      " of " +
+      guardPatrol.checkpoints.length;
+
+  }
+
+
+  renderActivePatrolChecklist();
+
+}
+
+// ======================================================
 // RENDER ACTIVE PATROL CHECKLIST
 // ======================================================
 
@@ -2612,6 +2729,8 @@ async function offlineGuardLogin() {
 
     currentOfflineGuard =
       matchedGuard;
+
+await restoreGuardActivePatrol();
 
         const guardWelcome =
       document.getElementById(
