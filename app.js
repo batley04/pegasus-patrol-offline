@@ -1305,6 +1305,197 @@ function stopCheckpointScanner() {
 }
 
 // ======================================================
+// CAPTURE CHECKPOINT GUARD PHOTO
+// ======================================================
+
+async function captureCheckpointGuardPhoto() {
+
+  const scannerBox =
+    document.getElementById(
+      "scannerBox"
+    );
+
+  const video =
+    document.getElementById(
+      "scannerVideo"
+    );
+
+  const statusBox =
+    document.getElementById(
+      "checkpointStatus"
+    );
+
+
+  stopCheckpointScanner();
+
+
+  if (statusBox) {
+
+    statusBox.textContent =
+      "📸 Taking guard verification photo...";
+
+  }
+
+
+  let frontStream = null;
+
+
+  try {
+
+    frontStream =
+      await navigator.mediaDevices
+        .getUserMedia({
+          video: {
+            facingMode: {
+              ideal: "user"
+            }
+          },
+          audio: false
+        });
+
+
+    video.srcObject =
+      frontStream;
+
+
+    if (scannerBox) {
+
+      scannerBox.style.display =
+        "block";
+
+    }
+
+
+    await video.play();
+
+
+    await new Promise(
+      function (resolve) {
+
+        setTimeout(
+          resolve,
+          500
+        );
+
+      }
+    );
+
+
+    const canvas =
+      document.createElement(
+        "canvas"
+      );
+
+
+    const sourceWidth =
+      video.videoWidth || 640;
+
+    const sourceHeight =
+      video.videoHeight || 480;
+
+
+    const maxWidth =
+      640;
+
+
+    const scale =
+      Math.min(
+        1,
+        maxWidth / sourceWidth
+      );
+
+
+    canvas.width =
+      Math.round(
+        sourceWidth * scale
+      );
+
+    canvas.height =
+      Math.round(
+        sourceHeight * scale
+      );
+
+
+    const context =
+      canvas.getContext(
+        "2d"
+      );
+
+
+    context.drawImage(
+      video,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+
+    const dataUrl =
+      canvas.toDataURL(
+        "image/jpeg",
+        0.7
+      );
+
+
+    const commaPosition =
+      dataUrl.indexOf(",");
+
+
+    if (commaPosition === -1) {
+
+      throw new Error(
+        "Guard photo could not be prepared."
+      );
+
+    }
+
+
+    return {
+      data:
+        dataUrl.substring(
+          commaPosition + 1
+        ),
+
+      mimeType:
+        "image/jpeg"
+    };
+
+
+  } finally {
+
+    if (frontStream) {
+
+      frontStream
+        .getTracks()
+        .forEach(
+          function (track) {
+
+            track.stop();
+
+          }
+        );
+
+    }
+
+
+    video.srcObject =
+      null;
+
+
+    if (scannerBox) {
+
+      scannerBox.style.display =
+        "none";
+
+    }
+
+  }
+
+}
+
+
+// ======================================================
 // READ CHECKPOINT QR
 // ======================================================
 
@@ -1453,6 +1644,30 @@ if (
   return;
 
 }
+
+
+let guardPhoto;
+
+try {
+
+  guardPhoto =
+    await captureCheckpointGuardPhoto();
+
+} catch (photoError) {
+
+  statusBox.textContent =
+    "❌ Guard verification photo required. Please scan the checkpoint again.";
+
+  return;
+
+}
+
+
+matchedCheckpoint.photoData =
+  guardPhoto.data;
+
+matchedCheckpoint.photoMimeType =
+  guardPhoto.mimeType;
 
 
 matchedCheckpoint.status =
