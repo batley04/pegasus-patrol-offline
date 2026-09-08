@@ -1149,6 +1149,59 @@ let checkpointCameraStream = null;
 // START CAMERA
 // ======================================================
 
+async function toggleCheckpointTorch() {
+
+  const torchButton =
+    document.getElementById(
+      "torchButton"
+    );
+
+  if (!checkpointCameraStream) {
+    return;
+  }
+
+  const videoTrack =
+    checkpointCameraStream
+      .getVideoTracks()[0];
+
+  if (!videoTrack) {
+    return;
+  }
+
+  const settings =
+    videoTrack.getSettings
+      ? videoTrack.getSettings()
+      : {};
+
+  const torchIsOn =
+    settings.torch === true;
+
+  try {
+
+    await videoTrack.applyConstraints({
+      advanced: [
+        {
+          torch: !torchIsOn
+        }
+      ]
+    });
+
+    torchButton.textContent =
+      torchIsOn
+        ? "🔦 Torch On"
+        : "🔦 Torch Off";
+
+  } catch (error) {
+
+    console.log(
+      "Unable to change torch:",
+      error
+    );
+
+  }
+
+}
+
 async function startCheckpointScanner() {
 
   const scannerBox =
@@ -1191,38 +1244,37 @@ async function startCheckpointScanner() {
 
     await video.play();
 
-// Try to turn the camera torch on automatically
-try {
-
-  const videoTrack =
-    checkpointCameraStream
-      .getVideoTracks()[0];
-
-  const capabilities =
-    videoTrack.getCapabilities
-      ? videoTrack.getCapabilities()
-      : {};
-
-  if (capabilities.torch) {
-
-    await videoTrack.applyConstraints({
-      advanced: [
-        {
-          torch: true
-        }
-      ]
-    });
-
-  }
-
-} catch (torchError) {
-
-  console.log(
-    "Torch not available:",
-    torchError
+const torchButton =
+  document.getElementById(
+    "torchButton"
   );
 
+const videoTrack =
+  checkpointCameraStream
+    .getVideoTracks()[0];
+
+const capabilities =
+  videoTrack &&
+  videoTrack.getCapabilities
+    ? videoTrack.getCapabilities()
+    : {};
+
+if (capabilities.torch) {
+
+  torchButton.style.display =
+    "inline-block";
+
+  torchButton.textContent =
+    "🔦 Torch On";
+
+} else {
+
+  torchButton.style.display =
+    "none";
+
 }
+
+
 
 
     scannerBox.style.display =
@@ -1301,6 +1353,21 @@ function stopCheckpointScanner() {
       "none";
 
   }
+
+const torchButton =
+  document.getElementById(
+    "torchButton"
+  );
+
+if (torchButton) {
+
+  torchButton.style.display =
+    "none";
+
+  torchButton.textContent =
+    "🔦 Torch On";
+
+}
 
 }
 
