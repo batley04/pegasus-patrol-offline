@@ -441,28 +441,35 @@ if (!syncRecord.patrol) {
 
 }
 
-        let synced =
-          false;
+     let synced =
+  await confirmOfflinePatrolSync(
+    syncRecord.patrol.patrolID
+  );
 
 
-        try {
+if (!synced) {
 
-          await syncPendingPatrol(
-            syncRecord
-          );
+  try {
 
-          synced =
-            true;
+    await syncPendingPatrol(
+      syncRecord
+    );
 
-        } catch (error) {
+  } catch (error) {
 
-          synced =
-            await confirmOfflinePatrolSync(
-              syncRecord.patrol.patrolID
-            );
+    console.log(
+      "Patrol POST response not confirmed directly."
+    );
 
-        }
+  }
 
+
+  synced =
+    await confirmOfflinePatrolSync(
+      syncRecord.patrol.patrolID
+    );
+
+}   
 
  if (synced) {
 
