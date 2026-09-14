@@ -5,6 +5,7 @@
 // ======================================================
 
 let currentOfflinePatrol = null;
+let pendingSyncRetryTimer = null;
 
 window.addEventListener(
   "load",
@@ -485,6 +486,18 @@ if (!synced) {
 
       await showPendingSyncSummary();
 
+if (pendingSyncRetryTimer) {
+  clearTimeout(
+    pendingSyncRetryTimer
+  );
+}
+
+pendingSyncRetryTimer =
+  setTimeout(
+    retryPendingPatrolSync,
+    15000
+  );
+
     } catch (error) {
 
       console.error(
@@ -496,6 +509,82 @@ if (!synced) {
 
   }
 );
+
+async function retryPendingPatrolSync() {
+
+  if (!navigator.onLine) {
+    return;
+  }
+
+  try {
+
+    const pendingRecords =
+      await getOfflineRecords(
+        "pendingSync"
+      );
+
+    for (
+      const syncRecord of pendingRecords
+    ) {
+
+      if (
+        !syncRecord ||
+        !syncRecord.patrol
+      ) {
+        continue;
+      }
+
+      let synced =
+        await confirmOfflinePatrolSync(
+          syncRecord.patrol.patrolID
+        );
+
+      if (!synced) {
+
+        try {
+
+          await syncPendingPatrol(
+            syncRecord
+          );
+
+        } catch (error) {
+
+          console.log(
+            "Retry patrol POST not confirmed directly."
+          );
+
+        }
+
+        synced =
+          await confirmOfflinePatrolSync(
+            syncRecord.patrol.patrolID
+          );
+
+      }
+
+      if (synced) {
+
+        await deleteOfflineRecord(
+          "pendingSync",
+          syncRecord.syncID
+        );
+
+      }
+
+    }
+
+    await showPendingSyncSummary();
+
+  } catch (error) {
+
+    console.error(
+      "Patrol retry sync failed:",
+      error
+    );
+
+  }
+
+}
 
 
     // ==================================================
