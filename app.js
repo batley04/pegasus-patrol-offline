@@ -359,6 +359,17 @@ if (!syncRecord.patrol) {
       "Pegasus connection restored."
     );
 
+   await new Promise(
+  function (resolve) {
+
+    setTimeout(
+      resolve,
+      3000
+    );
+
+  }
+);
+
 
     try {
 
