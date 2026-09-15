@@ -41,6 +41,8 @@ function syncPatrolData() {
         );
 
 
+
+
       window[
         callbackName
       ] =
@@ -365,6 +367,8 @@ function confirmOfflinePatrolSync(
           "script"
         );
 
+      
+      let confirmTimeout = null;
 
       window[
         callbackName
@@ -383,6 +387,12 @@ function confirmOfflinePatrolSync(
 
           } finally {
 
+if (confirmTimeout) {
+  clearTimeout(
+    confirmTimeout
+  );
+}
+
             delete window[
               callbackName
             ];
@@ -396,6 +406,12 @@ function confirmOfflinePatrolSync(
 
       script.onerror =
         function () {
+
+if (confirmTimeout) {
+  clearTimeout(
+    confirmTimeout
+  );
+}
 
           delete window[
             callbackName
@@ -425,6 +441,26 @@ function confirmOfflinePatrolSync(
         ) +
         "&t=" +
         Date.now();
+
+confirmTimeout =
+  setTimeout(
+    function () {
+
+      delete window[
+        callbackName
+      ];
+
+      script.remove();
+
+      reject(
+        new Error(
+          "Patrol sync confirmation timed out."
+        )
+      );
+
+    },
+    10000
+  );
 
 
       document.body.appendChild(
