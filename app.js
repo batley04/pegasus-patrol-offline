@@ -442,44 +442,25 @@ if (!syncRecord.patrol) {
 
 }
 
-     let synced =
-  await confirmOfflinePatrolSync(
-    syncRecord.patrol.patrolID
+try {
+
+  await syncPendingPatrol(
+    syncRecord
   );
 
+  await deleteOfflineRecord(
+    "pendingSync",
+    syncRecord.syncID
+  );
 
-if (!synced) {
+} catch (error) {
 
-  try {
+  console.log(
+    "Automatic patrol sync pending:",
+    error
+  );
 
-    await syncPendingPatrol(
-      syncRecord
-    );
-
-  } catch (error) {
-
-    console.log(
-      "Patrol POST response not confirmed directly."
-    );
-
-  }
-
-
-  synced =
-    await confirmOfflinePatrolSync(
-      syncRecord.patrol.patrolID
-    );
-
-}   
-
- if (synced) {
-
-          await deleteOfflineRecord(
-            "pendingSync",
-            syncRecord.syncID
-          );
-
-        }
+}
 
       }
 
