@@ -516,16 +516,22 @@ async function retryPendingPatrolSync() {
         continue;
       }
 
- try {
-
+try {
   await syncPendingPatrol(
     syncRecord
   );
 
-  await deleteOfflineRecord(
-    "pendingSync",
-    syncRecord.syncID
-  );
+  const synced =
+    await confirmOfflinePatrolSync(
+      syncRecord.patrol.patrolID
+    );
+
+  if (synced) {
+    await deleteOfflineRecord(
+      "pendingSync",
+      syncRecord.syncID
+    );
+  }
 
 } catch (error) {
 
