@@ -6,6 +6,7 @@
 
 let currentOfflinePatrol = null;
 let pendingSyncRetryTimer = null;
+let pegasusInternetAvailable = null;
 
 window.addEventListener(
   "load",
@@ -515,42 +516,25 @@ async function retryPendingPatrolSync() {
         continue;
       }
 
-      let synced =
-        await confirmOfflinePatrolSync(
-          syncRecord.patrol.patrolID
-        );
+ try {
 
-      if (!synced) {
+  await syncPendingPatrol(
+    syncRecord
+  );
 
-        try {
+  await deleteOfflineRecord(
+    "pendingSync",
+    syncRecord.syncID
+  );
 
-          await syncPendingPatrol(
-            syncRecord
-          );
+} catch (error) {
 
-        } catch (error) {
+  console.log(
+    "Retry patrol sync pending:",
+    error
+  );
 
-          console.log(
-            "Retry patrol POST not confirmed directly."
-          );
-
-        }
-
-        synced =
-          await confirmOfflinePatrolSync(
-            syncRecord.patrol.patrolID
-          );
-
-      }
-
-      if (synced) {
-
-        await deleteOfflineRecord(
-          "pendingSync",
-          syncRecord.syncID
-        );
-
-      }
+}
 
     }
 
@@ -627,7 +611,7 @@ async function retryPendingPatrolSync() {
 // CONNECTION STATUS
 // ======================================================
 
-function updateConnectionStatus() {
+async function updateConnectionStatus() {
 
   const box =
     document.getElementById(
@@ -638,8 +622,39 @@ function updateConnectionStatus() {
     return;
   }
 
+  let internetAvailable = false;
 
   if (navigator.onLine) {
+
+    try {
+
+      await fetch(
+        PEGASUS_API_URL +
+          "?api=ping&t=" +
+          Date.now(),
+        {
+          method: "GET",
+          mode: "no-cors",
+          cache: "no-store"
+        }
+      );
+
+      internetAvailable = true;
+
+    } catch (error) {
+
+      internetAvailable = false;
+
+    }
+
+  }
+
+  if (internetAvailable) {
+
+    const internetWasOffline =
+      pegasusInternetAvailable === false;
+
+    pegasusInternetAvailable = true;
 
     box.textContent =
       "🟢 Online";
@@ -647,7 +662,13 @@ function updateConnectionStatus() {
     box.className =
       "online";
 
+    if (internetWasOffline) {
+      retryPendingPatrolSync();
+    }
+
   } else {
+
+    pegasusInternetAvailable = false;
 
     box.textContent =
       "🟠 Offline";
@@ -658,6 +679,12 @@ function updateConnectionStatus() {
   }
 
 }
+
+setInterval(
+  updateConnectionStatus,
+  10000
+);
+
 
 // ======================================================
 // MANUAL PATROL DATA SYNC
