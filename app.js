@@ -7,6 +7,7 @@
 let currentOfflinePatrol = null;
 let pendingSyncRetryTimer = null;
 let pegasusInternetAvailable = null;
+let pendingPatrolRetryInProgress = false;
 
 window.addEventListener(
   "load",
@@ -494,9 +495,14 @@ pendingSyncRetryTimer =
 
 async function retryPendingPatrolSync() {
 
-  if (!navigator.onLine) {
-    return;
-  }
+if (
+  !navigator.onLine ||
+  pendingPatrolRetryInProgress
+) {
+  return;
+}
+
+pendingPatrolRetryInProgress = true;
 
   try {
 
@@ -546,12 +552,16 @@ try {
 
     await showPendingSyncSummary();
 
-  } catch (error) {
+} catch (error) {
 
     console.error(
       "Patrol retry sync failed:",
       error
     );
+
+  } finally {
+
+    pendingPatrolRetryInProgress = false;
 
   }
 
@@ -657,9 +667,6 @@ async function updateConnectionStatus() {
 
   if (internetAvailable) {
 
-    const internetWasOffline =
-      pegasusInternetAvailable === false;
-
     pegasusInternetAvailable = true;
 
     box.textContent =
@@ -668,9 +675,7 @@ async function updateConnectionStatus() {
     box.className =
       "online";
 
-    if (internetWasOffline) {
-      retryPendingPatrolSync();
-    }
+retryPendingPatrolSync();
 
   } else {
 
