@@ -506,7 +506,7 @@ pendingPatrolRetryInProgress = true;
 
   try {
 
-   await syncPatrolData();
+
 
     const pendingRecords =
       await getOfflineRecords(
