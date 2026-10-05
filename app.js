@@ -3019,9 +3019,30 @@ async function showPendingSyncSummary() {
         "pendingSync"
       );
 
-    box.textContent =
-      pending.length +
-      " item(s) waiting to sync.";
+const pendingTypes =
+  pending.map(function (record) {
+
+    if (record.incident) {
+      return "Incident";
+    }
+
+    if (record.patrol) {
+      return "Patrol";
+    }
+
+    return "Unknown";
+  });
+
+box.textContent =
+  pending.length +
+  " item(s) waiting to sync." +
+  (
+    pending.length
+      ? " (" + pendingTypes.join(", ") + ")"
+      : ""
+  );
+
+
 
   } catch (error) {
 
