@@ -517,12 +517,47 @@ pendingPatrolRetryInProgress = true;
       const syncRecord of pendingRecords
     ) {
 
-      if (
-        !syncRecord ||
-        !syncRecord.patrol
-      ) {
-        continue;
-      }
+if (!syncRecord) {
+  continue;
+}
+
+// ====================================================
+// INCIDENT SYNC
+// ====================================================
+
+if (syncRecord.incident) {
+
+  try {
+
+    await syncPendingIncident(
+      syncRecord
+    );
+
+    await deleteOfflineRecord(
+      "pendingSync",
+      syncRecord.syncID
+    );
+
+  } catch (error) {
+
+    console.log(
+      "Automatic incident sync pending:",
+      error
+    );
+
+  }
+
+  continue;
+}
+
+// ====================================================
+// PATROL SYNC
+// ====================================================
+
+if (!syncRecord.patrol) {
+  continue;
+}
+
 
 try {
   await syncPendingPatrol(
