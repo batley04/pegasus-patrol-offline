@@ -545,6 +545,21 @@ if (syncRecord.incident) {
       error
     );
 
+const syncSummary =
+  document.getElementById(
+    "pendingSyncSummary"
+  );
+
+if (syncSummary) {
+  syncSummary.textContent =
+    "Incident auto-sync error: " +
+    (
+      error && error.message
+        ? error.message
+        : String(error)
+    );
+}
+
   }
 
   continue;
