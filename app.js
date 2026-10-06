@@ -3051,9 +3051,11 @@ async function showPendingSyncSummary() {
 const pendingTypes =
   pending.map(function (record) {
 
-    if (record.incident) {
-      return "Incident";
-    }
+if (record.incident) {
+  return record.incident.photoData
+    ? "Incident WITH PHOTO"
+    : "Incident NO PHOTO";
+}
 
     if (record.patrol) {
       return "Patrol";
