@@ -763,6 +763,7 @@ async function updateConnectionStatus() {
   }
 
   if (internetAvailable) {
+alert("INTERNET CHECK PASSED - calling auto retry");
 
     pegasusInternetAvailable = true;
 
