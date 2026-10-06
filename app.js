@@ -521,6 +521,13 @@ if (
   !navigator.onLine ||
   pendingPatrolRetryInProgress
 ) {
+  alert(
+    "AUTO RETRY BLOCKED - online=" +
+    navigator.onLine +
+    ", inProgress=" +
+    pendingPatrolRetryInProgress
+  );
+
   return;
 }
 
