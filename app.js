@@ -728,6 +728,9 @@ async function updateConnectionStatus() {
     return;
   }
 
+const wasInternetAvailable =
+  pegasusInternetAvailable;
+
   let internetAvailable = false;
 
   if (navigator.onLine) {
@@ -756,6 +759,13 @@ async function updateConnectionStatus() {
   }
 
   if (internetAvailable) {
+
+
+if (wasInternetAvailable === false) {
+  retryPendingPatrolSync();
+}
+
+
 alert("INTERNET CHECK PASSED - calling auto retry");
 
     pegasusInternetAvailable = true;
