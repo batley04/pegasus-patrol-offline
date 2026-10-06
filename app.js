@@ -187,16 +187,9 @@ renderActivePatrolChecklist();
               const syncRecord of pendingRecords
             ) {
 
-              if (
-                !syncRecord ||
-                !syncRecord.patrol
-              ) {
+              
 
-                 continue;
-
-              }
-
-if (!syncRecord) {
+              if (!syncRecord) {
 
   continue;
 
