@@ -328,7 +328,7 @@ const timeout =
     function () {
       controller.abort();
     },
-    10000
+    30000
   );
 
 
