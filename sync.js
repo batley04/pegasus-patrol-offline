@@ -308,6 +308,7 @@ clearTimeout(
 async function syncPendingIncident(
   syncRecord
 ) {
+alert("SYNC PENDING INCIDENT STARTED");
 
   if (
     !syncRecord ||
