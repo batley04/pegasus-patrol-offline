@@ -20,6 +20,7 @@ window.addEventListener(
     // OPEN OFFLINE DATABASE ON STARTUP
     // ==================================================
 
+
     openPegasusDB()
       .then(
         async function () {
@@ -219,6 +220,15 @@ if (syncRecord.incident) {
       "Incident sync pending:",
       error
     );
+
+alert(
+  "Incident sync error: " +
+  (
+    error && error.message
+      ? error.message
+      : String(error)
+  )
+);
 
   }
 
@@ -590,6 +600,17 @@ try {
     "Retry patrol sync pending:",
     error
   );
+
+alert(
+  "Patrol sync error: " +
+  (
+    error && error.message
+      ? error.message
+      : String(error)
+  )
+);
+
+
 
 }
 
