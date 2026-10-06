@@ -524,6 +524,11 @@ if (
   return;
 }
 
+alert(
+  "AUTO RETRY ENTERING - inProgress=" +
+  pendingPatrolRetryInProgress
+);
+
 pendingPatrolRetryInProgress = true;
 
   try {
