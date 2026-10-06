@@ -237,15 +237,30 @@ async function syncPendingPatrol(
 
   }
 
+const controller =
+  new AbortController();
+
+const timeout =
+  setTimeout(
+    function () {
+      controller.abort();
+    },
+    10000
+  );
+
 
   const response =
     await fetch(
       PEGASUS_API_URL +
       "?api=offline-patrol-sync",
-      {
-        method: "POST",
+     {
+  method: "POST",
 
-headers: {
+  signal:
+    controller.signal,
+
+  headers: {
+
   "Content-Type":
     "text/plain;charset=utf-8"
 },
@@ -261,6 +276,10 @@ headers: {
 
   const result =
     await response.json();
+
+clearTimeout(
+  timeout
+);
 
 
   if (
