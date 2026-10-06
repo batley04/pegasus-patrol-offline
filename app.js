@@ -498,6 +498,25 @@ pendingSyncRetryTimer =
 
 async function retryPendingPatrolSync() {
 
+console.log(
+  "AUTO RETRY CHECK:",
+  "online=" + navigator.onLine,
+  "inProgress=" + pendingPatrolRetryInProgress
+);
+
+const retryDebugBox =
+  document.getElementById(
+    "pendingSyncSummary"
+  );
+
+if (retryDebugBox) {
+  retryDebugBox.textContent =
+    "AUTO RETRY: online=" +
+    navigator.onLine +
+    ", inProgress=" +
+    pendingPatrolRetryInProgress;
+}
+
 if (
   !navigator.onLine ||
   pendingPatrolRetryInProgress
