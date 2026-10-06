@@ -775,7 +775,12 @@ alert("INTERNET CHECK PASSED - calling auto retry");
 
 alert("ABOUT TO CALL RETRY");
 
-retryPendingPatrolSync();
+retryPendingPatrolSync().catch(function(error) {
+  alert(
+    "RETRY FUNCTION ERROR: " +
+    (error && error.message ? error.message : String(error))
+  );
+});
 
 alert("RETRY CALL RETURNED");
 
