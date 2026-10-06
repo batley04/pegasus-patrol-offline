@@ -389,14 +389,7 @@ if (!syncRecord.patrol) {
         const syncRecord of pendingRecords
       ) {
 
-if (
-  !syncRecord ||
-  !syncRecord.patrol
-) {
 
-  continue;
-
-}
 
 
      if (!syncRecord) {
