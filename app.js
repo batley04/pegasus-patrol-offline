@@ -773,7 +773,11 @@ alert("INTERNET CHECK PASSED - calling auto retry");
     box.className =
       "online";
 
+alert("ABOUT TO CALL RETRY");
+
 retryPendingPatrolSync();
+
+alert("RETRY CALL RETURNED");
 
   } else {
 
