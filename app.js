@@ -737,16 +737,33 @@ const wasInternetAvailable =
 
     try {
 
+const pingController =
+  new AbortController();
+
+const pingTimeout =
+  setTimeout(
+    function () {
+      pingController.abort();
+    },
+    5000
+  );
+
+
       await fetch(
         PEGASUS_API_URL +
           "?api=ping&t=" +
           Date.now(),
-        {
-          method: "GET",
-          mode: "no-cors",
-          cache: "no-store"
-        }
+ {
+  method: "GET",
+  mode: "no-cors",
+  cache: "no-store",
+  signal: pingController.signal
+}
       );
+
+clearTimeout(
+  pingTimeout
+);
 
       internetAvailable = true;
 
