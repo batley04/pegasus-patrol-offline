@@ -830,6 +830,18 @@ setInterval(
   10000
 );
 
+setInterval(
+  function () {
+
+    if (navigator.onLine) {
+
+      retryPendingPatrolSync();
+
+    }
+
+  },
+  15000
+);
 
 // ======================================================
 // MANUAL PATROL DATA SYNC
