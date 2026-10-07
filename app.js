@@ -745,7 +745,7 @@ const pingTimeout =
     function () {
       pingController.abort();
     },
-    5000
+    15000
   );
 
 
