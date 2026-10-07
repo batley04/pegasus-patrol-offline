@@ -767,11 +767,18 @@ clearTimeout(
 
       internetAvailable = true;
 
-    } catch (error) {
+} catch (error) {
 
-      internetAvailable = false;
+  internetAvailable = false;
 
-    }
+  alert(
+    "PING ERROR: " +
+    (error && error.message
+      ? error.message
+      : String(error))
+  );
+
+}
 
   }
 
