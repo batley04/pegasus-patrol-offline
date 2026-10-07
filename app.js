@@ -221,14 +221,6 @@ if (syncRecord.incident) {
       error
     );
 
-alert(
-  "Incident sync error: " +
-  (
-    error && error.message
-      ? error.message
-      : String(error)
-  )
-);
 
   }
 
@@ -491,43 +483,16 @@ pendingSyncRetryTimer =
 
 async function retryPendingPatrolSync() {
 
-console.log(
-  "AUTO RETRY CHECK:",
-  "online=" + navigator.onLine,
-  "inProgress=" + pendingPatrolRetryInProgress
-);
-
-const retryDebugBox =
-  document.getElementById(
-    "pendingSyncSummary"
-  );
-
-if (retryDebugBox) {
-  retryDebugBox.textContent =
-    "AUTO RETRY: online=" +
-    navigator.onLine +
-    ", inProgress=" +
-    pendingPatrolRetryInProgress;
-}
-
 if (
   !navigator.onLine ||
   pendingPatrolRetryInProgress
 ) {
-  alert(
-    "AUTO RETRY BLOCKED - online=" +
-    navigator.onLine +
-    ", inProgress=" +
-    pendingPatrolRetryInProgress
-  );
+
 
   return;
 }
 
-alert(
-  "AUTO RETRY ENTERING - inProgress=" +
-  pendingPatrolRetryInProgress
-);
+
 
 pendingPatrolRetryInProgress = true;
 
@@ -572,20 +537,6 @@ if (syncRecord.incident) {
       error
     );
 
-const syncSummary =
-  document.getElementById(
-    "pendingSyncSummary"
-  );
-
-if (syncSummary) {
-  syncSummary.textContent =
-    "Incident auto-sync error: " +
-    (
-      error && error.message
-        ? error.message
-        : String(error)
-    );
-}
 
   }
 
@@ -624,16 +575,6 @@ try {
     "Retry patrol sync pending:",
     error
   );
-
-alert(
-  "Patrol sync error: " +
-  (
-    error && error.message
-      ? error.message
-      : String(error)
-  )
-);
-
 
 
 }
