@@ -6,7 +6,7 @@
 
 let currentOfflinePatrol = null;
 let pendingSyncRetryTimer = null;
-let pegasusInternetAvailable = null;
+
 let pendingPatrolRetryInProgress = false;
 
 window.addEventListener(
@@ -717,7 +717,7 @@ alert(
 // CONNECTION STATUS
 // ======================================================
 
-async function updateConnectionStatus() {
+function updateConnectionStatus() {
 
   const box =
     document.getElementById(
@@ -728,71 +728,7 @@ async function updateConnectionStatus() {
     return;
   }
 
-const wasInternetAvailable =
-  pegasusInternetAvailable;
-
-  let internetAvailable = false;
-
   if (navigator.onLine) {
-
-    try {
-
-const pingController =
-  new AbortController();
-
-const pingTimeout =
-  setTimeout(
-    function () {
-      pingController.abort();
-    },
-    15000
-  );
-
-
-      await fetch(
-        PEGASUS_API_URL +
-          "?api=ping&t=" +
-          Date.now(),
- {
-  method: "GET",
-  mode: "no-cors",
-  cache: "no-store",
-  signal: pingController.signal
-}
-      );
-
-clearTimeout(
-  pingTimeout
-);
-
-      internetAvailable = true;
-
-} catch (error) {
-
-  internetAvailable = false;
-
-  alert(
-    "PING ERROR: " +
-    (error && error.message
-      ? error.message
-      : String(error))
-  );
-
-}
-
-  }
-
-  if (internetAvailable) {
-
-
-if (wasInternetAvailable === false) {
-  retryPendingPatrolSync();
-}
-
-
-alert("INTERNET CHECK PASSED - calling auto retry");
-
-    pegasusInternetAvailable = true;
 
     box.textContent =
       "🟢 Online";
@@ -800,20 +736,7 @@ alert("INTERNET CHECK PASSED - calling auto retry");
     box.className =
       "online";
 
-alert("ABOUT TO CALL RETRY");
-
-retryPendingPatrolSync().catch(function(error) {
-  alert(
-    "RETRY FUNCTION ERROR: " +
-    (error && error.message ? error.message : String(error))
-  );
-});
-
-alert("RETRY CALL RETURNED");
-
   } else {
-
-    pegasusInternetAvailable = false;
 
     box.textContent =
       "🟠 Offline";
@@ -828,19 +751,6 @@ alert("RETRY CALL RETURNED");
 setInterval(
   updateConnectionStatus,
   10000
-);
-
-setInterval(
-  function () {
-
-    if (navigator.onLine) {
-
-      retryPendingPatrolSync();
-
-    }
-
-  },
-  15000
 );
 
 // ======================================================
