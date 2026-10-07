@@ -4,7 +4,7 @@
 // ======================================================
 
 const CACHE_NAME =
-  "pegasus-patrol-build-008-v96";
+  "pegasus-patrol-build-008-v97";
 
 const APP_FILES = [
 
@@ -115,6 +115,13 @@ self.addEventListener(
     ) {
       return;
     }
+
+if (
+  new URL(event.request.url).origin !==
+  self.location.origin
+) {
+  return;
+}
 
 
     // ==================================================
