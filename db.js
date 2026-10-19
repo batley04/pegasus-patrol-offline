@@ -353,3 +353,84 @@ async function deleteOfflineRecord(
   );
 
 }
+
+async function getLatestActivePatrol(guardID) {
+
+  const db = await openPegasusDB();
+
+  return new Promise(function (resolve, reject) {
+
+    let latest = null;
+    let latestTime = -Infinity;
+    let transaction;
+
+    try {
+
+      transaction = db.transaction(
+        "activePatrols",
+        "readonly"
+      );
+
+      transaction.oncomplete = function () {
+        db.close();
+        resolve(latest);
+      };
+
+      transaction.onabort = function () {
+        db.close();
+        reject(
+          transaction.error ||
+          new Error("Unable to read active patrol.")
+        );
+      };
+
+      const request = transaction
+        .objectStore("activePatrols")
+        .openCursor();
+
+      request.onsuccess = function () {
+
+        const cursor = request.result;
+
+        if (!cursor) {
+          return;
+        }
+
+        const patrol = cursor.value;
+
+        if (
+          patrol &&
+          patrol.status === "Active" &&
+          (
+            guardID == null ||
+            String(patrol.guardID) === String(guardID)
+          )
+        ) {
+
+          const parsedTime =
+            new Date(patrol.startedAt || 0).getTime();
+
+          const startedTime =
+            Number.isFinite(parsedTime) ? parsedTime : 0;
+
+          if (!latest || startedTime > latestTime) {
+            latest = patrol;
+            latestTime = startedTime;
+          }
+
+        }
+
+        cursor.continue();
+
+      };
+
+    } catch (error) {
+
+      db.close();
+      reject(error);
+
+    }
+
+  });
+
+}

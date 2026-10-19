@@ -4,14 +4,14 @@
 // ======================================================
 
 const CACHE_NAME =
-  "pegasus-patrol-build-008-v101";
+  "pegasus-patrol-build-008-v102";
 
 const APP_FILES = [
 
   "./",
   "./index.html",
-  "./app.js",
-  "./db.js",
+    "./app.js?v=102",
+   "./db.js?v=102",
   "./sync.js",
   "./manifest.json",
   "./pegasus-logo.png",

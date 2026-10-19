@@ -35,37 +35,8 @@ window.addEventListener(
           await showPendingSyncSummary();
           await loadOfflinePatrolSelectors();
 
- const activePatrolRecords =
-            await getOfflineRecords(
-              "activePatrols"
-            );
-
 const savedActivePatrol =
-  activePatrolRecords
-    .filter(
-      function (patrol) {
-
-        return (
-          patrol.status ===
-          "Active"
-        );
-
-      }
-    )
-    .sort(
-      function (a, b) {
-
-        return (
-          new Date(
-            b.startedAt || 0
-          ).getTime() -
-          new Date(
-            a.startedAt || 0
-          ).getTime()
-        );
-
-      }
-    )[0] || null;
+  await getLatestActivePatrol();
 
 
 
@@ -2792,34 +2763,10 @@ async function restoreGuardActivePatrol() {
     return;
   }
 
-  const patrols =
-    await getOfflineRecords(
-      "activePatrols"
-    );
-
   const guardPatrol =
-    patrols
-      .filter(
-        function (patrol) {
-
-          return (
-            patrol.status === "Active" &&
-            String(patrol.guardID) ===
-            String(currentOfflineGuard.guardID)
-          );
-
-        }
-      )
-      .sort(
-        function (a, b) {
-
-          return (
-            new Date(b.startedAt || 0).getTime() -
-            new Date(a.startedAt || 0).getTime()
-          );
-
-        }
-      )[0] || null;
+    await getLatestActivePatrol(
+      currentOfflineGuard.guardID
+    );
 
 
   currentOfflinePatrol =
